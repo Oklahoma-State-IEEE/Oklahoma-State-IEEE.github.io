@@ -1,0 +1,29 @@
+---
+layout: base
+---
+
+{% include header.html type="event" %}
+<div class="container" role="main" id="flex-section">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <a class="eventitem-backlink" href="/events">Back to All Events</a>
+      <br/>
+      <article role="main" class="event-post">
+        <div class="eventitem-column-meta">
+          <h1 class="eventitem-title">{{ page.title }}</h1>
+          <ul class = "eventitem-meta">
+            <li class="eventitem-meta-item">{{ page.event_date | date: "%A, %B %-d, %Y" }}</li>
+            <li class="eventitem-meta-item">{{ page.event_time }}</li>
+          </ul>
+          <ul class = "eventitem-meta">
+            <li class="eventitem-meta-item">{{ page.event_location }}</li>
+            <li class="eventitem-meta-item">{{ page.event_address }}</li>
+          </ul>
+        </div>
+        <div class="eventitem-column-content">
+          {{ content }}
+        </div>
+      </article>
+    </div>
+  </div>
+</div>

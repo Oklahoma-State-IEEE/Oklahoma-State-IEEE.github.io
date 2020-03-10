@@ -1,0 +1,19 @@
+---
+layout:
+title:
+permalink: /calendar-data/
+---
+
+[
+{% for event in site.events %}
+	{
+		"title":"{{event.title}}",
+		"date": "{{event.event_date | date: "%A, %B %-d, %Y %r" }}",
+		"time": "{{event.event_time}}",
+		"location": "{{event.event_location}}",
+		"address": "{{event.event_address}}",
+		"url":"{{event.url}}"
+	}
+	{%unless forloop.last %},{%endunless%}
+{% endfor %}
+]

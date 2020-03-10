@@ -7,6 +7,8 @@
 
   <meta name="author" content="{{ site.author.name }}" />
 
+  {% seo %}
+  
   {% if page.subtitle %}
   <meta name="description" content="{{ page.subtitle }}">
   {% endif %}
@@ -14,7 +16,7 @@
   <link rel="alternate" type="application/rss+xml" title="{{ site.title }} {{ site.title-separator }} {{ site.description }}" href="{{ '/feed.xml' | absolute_url }}" />
 
   <script src="https://kit.fontawesome.com/d704fcaeda.js" crossorigin="anonymous"></script>
-  
+
   {% include gtag.html %}
   {% include gtm_head.html %}
   {% include google_analytics.html %}

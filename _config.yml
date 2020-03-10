@@ -24,12 +24,13 @@ paginate_path: "/news/page:num/"
 # List of links in the navigation bar
 navbar-links:
   Membership: "membership"
-  Events: "events"
+  News & Events:
+    - News: "news"
+    - Events: "events"
   Resources:
     - Sponsors: "sponsors"
     - Officers: "officers"
   Contact: "contact"
-  Sign In: "sign-in"
 
 # Image to show in the navigation bar - image must be a square (width = height)
 # Remove this parameter if you don't want an image in the navbar
@@ -126,6 +127,13 @@ title-separator: "-"
 # Ruby Date Format
 date_format: "%B %-d, %Y"
 
+# Define collection for calendar
+collections:
+  events:
+    output: true
+    permalink: /events/:path/
+    title: Events
+
 # --- Don't need to touch anything below here (but you can if you want) --- #
 
 # Output options (more information on Jekyll's site)
@@ -167,6 +175,7 @@ exclude:
   - LICENSE
   - README.md
   - Vagrantfile
+  - vendor
 
 # prose.io config
 prose:
@@ -223,3 +232,4 @@ prose:
 plugins:
   - jekyll-paginate
   - jekyll-sitemap
+  - jekyll-seo-tag

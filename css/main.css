@@ -785,3 +785,37 @@ pre {
 #flex-section {
   flex:1;
 }
+[hidden] {
+  display: none !important;
+}
+.center {
+  text-align: center;
+}
+input[type=text], input[type=email], select, textarea {
+  width: 100%; /* Full width */
+  padding: 12px; /* Some padding */
+  box-sizing: border-box; /* Make sure that padding and width stays in place */
+  margin-top: 6px; /* Add a top margin */
+  margin-bottom: 16px; /* Bottom margin */
+  resize: vertical /* Allow the user to vertically resize the textarea (not horizontally) */
+}
+/* Style the submit button with a specific background color etc */
+input[type=submit] {
+  padding: 12px 20px;
+  border: none;
+  cursor: pointer;
+}
+input[type=submit]:hover, input[type=submit]:focus {
+  text-decoration: underline;
+  background-color: #d3eaf6;
+  color: {{ site.hover-col }};
+}
+.eventitem-backlink::before {
+  content: "\2190\0020 ";
+}
+.eventitem-backlink {
+  text-transform: uppercase;
+}
+.officers p{
+  margin: 0;
+}

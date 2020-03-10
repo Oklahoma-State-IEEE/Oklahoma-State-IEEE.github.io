@@ -30,3 +30,110 @@
     <script src="{{ js | relative_url }}"></script>
   {% endfor %}
 {% endif %}
+
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Sign In</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body center" id="login-signin">
+        <h1>Welcome to OSU IEEE!</h1>
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              <h1><a href="javascript:void(0);" id="google-sign-in" class="center"><i class="fab fa-google" aria-hidden="true"></i><br>Google</a></h1>
+            </div>
+            <div class="col">
+              <h1><a href="javascript:void(0);" id="github-sign-in" class="center"><i class="fab fa-github" aria-hidden="true"></i><br>GitHub</a></h1>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div hidden class="modal-body center" id="login-wait">
+        <img src="/img/loading.gif" width="200" height="200" class="img-fluid" alt="Please Wait...">
+        <h4>Signing in...</h4>
+      </div>
+      <div hidden class="modal-body center" id="login-success">
+        <h1>You're signed in!</h1>
+        <h4 id="login-name"></h4>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="newAccountModal" tabindex="-1" role="dialog" aria-labelledby="newAccountModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">New Account</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div id="newaccount-new">
+        <div class="modal-body center">
+          <h4>Welcome to IEEE. Let's get you set up!</h4>
+          <p>Become a member by filling in the fields below.<br>If you are already a member, <a href="javascript:void(0);" id="newaccount-signout">sign out</a> and sign in with your original account.</p>
+          <p hidden class="text-danger" id="newaccount-warning">Please complete all text fields.</p>
+          <div class="form-label-group">
+            <input type="text" id="newaccount-fname" class="form-control" placeholder="First Name" required autofocus>
+            <label for="newaccount-fname">First Name</label>
+          </div>
+          <div class="form-label-group">
+            <input type="text" id="newaccount-lname" class="form-control" placeholder="Last Name" required>
+            <label for="newaccount-lname">Last Name</label>
+          </div>
+          <div class="form-label-group">
+            <input type="email" id="newaccount-email" class="form-control" placeholder="Email" required>
+            <label for="newaccount-email">Email</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" value="submit" class="form-btn btn-lg btn-primary" id="newaccount-submit">Set Up Account</button>
+        </div>
+      </div>
+
+      <div hidden class="modal-body center" id="newaccount-wait">
+        <img src="/img/loading.gif" width="200" height="200" class="img-fluid" alt="Please Wait...">
+        <h4>Setting up your account...</h4>
+      </div>
+
+      <div hidden class="modal-body center" id="newaccount-success">
+        <h1>Your account is ready!</h1>
+        <h4>Thanks for becoming an IEEE member!<br>We'll take you back to your page momentarily...</h4>
+      </div>
+
+      <div hidden class="modal-body center" id="newaccount-failed">
+        <h1>Oops, something happened!</h1>
+        <p>Here's the error that occurred:</p>
+        <p id="newaccount-error"></p>
+        <p>Refresh the page and try again. If the issue persists, talk to an IEEE officer.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Firebase Script -->
+<script src="https://www.gstatic.com/firebasejs/7.10.0/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var firebaseConfig = {
+    apiKey: "AIzaSyAiDbb6jfPKWRTLd2ngGN8Cv1w3fm3VocM",
+    authDomain: "osuieee-1e348.firebaseapp.com",
+    databaseURL: "https://osuieee-1e348.firebaseio.com",
+    projectId: "osuieee-1e348",
+    storageBucket: "osuieee-1e348.appspot.com",
+    messagingSenderId: "33563678645",
+    appId: "1:33563678645:web:a35db53aa30e568987ebfc"
+  };
+  firebase.initializeApp(firebaseConfig);
+</script>
+
+<!-- Firebase Auth -->
+<script src="/js/firebaseauth.js" type="text/javascript"></script>
+<script src="/js/setup.js" type="text/javascript"></script>
+<script src="/js/helperFuncs.js" type="text/javascript"></script>

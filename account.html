@@ -1,0 +1,233 @@
+---
+layout: page
+title: My Account
+permalink: /account.html
+js: /js/account/index.js
+---
+
+<div>
+  <h1>Profile</h1>
+  <p>View and manage your profile settings here.</p>
+  <p>Your profile is visible to organizers for any IEEE projects, competitions, and events you sign up for. IEEE's sponsors can also see your resume if you upload to the IEEE Resume book.</p>
+  <table class="table">
+    <tr>
+      <th scope="row" class="table-left">Name</th>
+      <td class="table-center" id="account-name"></td>
+      <td class="table-right"><a href="javascript:void(0);" onclick="$('#editNameModal').modal('show');">Edit</a></td>
+    </tr>
+    <tr>
+      <th scope="row" class="table-left">Email</th>
+      <td class="table-center" id="account-email"></td>
+      <td class="table-right"><a href="javascript:void(0);" onclick="$('#editEmailModal').modal('show');">Edit</a></td>
+    </tr>
+    <tr>
+      <th scope="row" class="table-left">Major</th>
+      <td class="table-center" id="account-major"></td>
+      <td class="table-right"><a href="javascript:void(0);" onclick="$('#editMajorModal').modal('show');">Edit</a></td>
+    </tr>
+    <tr>
+      <th scope="row" class="table-left">Year</th>
+      <td class="table-center" id="account-year"></td>
+      <td class="table-right"><a href="javascript:void(0);" onclick="$('#editYearModal').modal('show');">Edit</a></td>
+    </tr>
+  </table>
+  <h1 id="ieee-resume-book">IEEE Resume Book</h1>
+
+  <p>Upload your resume here to be included in the IEEE Resume Book.</p>
+
+  <p>Your resume, along with your profile above, will be sent to IEEE’s sponsors, as well as organizers for any IEEE projects, competitions, and events you sign up for.</p>
+
+  <table class="table">
+  	<tr>
+      <th scope="row" class="table-left">Resume</th>
+      <td class="table-center" id="account-resume"></td>
+      <td class="table-right"><a href="javascript:void(0);" onclick="$('#editResumeModal').modal('show');">Edit</a></td>
+    </tr>
+  </table>
+
+  <h1>Contact Us</h1>
+
+  <p>If you have questions or are experiencing issues with this website, please email the officer team at <a href="mailto:ieee@okstate.edu">ieee@okstate.edu</a> and we will get back to you as soon as possible. Thanks!</p>
+</div>
+<div class="modal fade" id="editNameModal" tabindex="-1" role="dialog" aria-labelledby="editNameModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Name</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+
+            <div id="edit-name-edit">
+                <div class="modal-body center">
+                    <p>Enter your name below.</p>
+                    <p class="text-danger" id="edit-name-warning"></p>
+                    <div class="form-label-group">
+                        <input type="text" id="edit-name-fname" class="form-control" placeholder="First Name" required>
+                        <label for="edit-name-fname">First Name</label>
+                    </div>
+                    <div class="form-label-group">
+                        <input type="text" id="edit-name-lname" class="form-control" placeholder="Last Name" required>
+                        <label for="edit-name-lname">Last Name</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <btn class="form-btn btn-lg btn-primary" id="edit-name-submit">Submit</btn>
+                </div>
+            </div>
+
+            <div hidden class="modal-body center" id="edit-name-wait">
+                <img src="/img/loading.gif" width="200" height="200" class="img-fluid" alt="Please Wait...">
+                <h4>Submitting...</h4>
+            </div>
+            <div hidden class="modal-body center" id="edit-name-success">
+                <h1>Success!</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editEmailModal" tabindex="-1" role="dialog" aria-labelledby="editEmailModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Email</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+
+            <div id="edit-email-edit">
+                <div class="modal-body center">
+                    <p>Enter your email below.<br>This will be used for any IEEE announcements, as well as announcements for projects and events you sign up for.</p>
+                    <p class="text-danger" id="edit-email-warning"></p>
+                    <div class="form-label-group">
+                        <input type="email" id="edit-email-email" class="form-control" placeholder="Email" required>
+                        <label for="edit-email-email">Email</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <btn class="form-btn btn-lg btn-primary" id="edit-email-submit">Submit</btn>
+                </div>
+            </div>
+
+            <div hidden class="modal-body center" id="edit-email-wait">
+                <img src="/img/loading.gif" width="200" height="200" class="img-fluid" alt="Please Wait...">
+                <h4>Submitting...</h4>
+            </div>
+            <div hidden class="modal-body center" id="edit-email-success">
+                <h1>Success!</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editMajorModal" tabindex="-1" role="dialog" aria-labelledby="editMajorModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Major</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+
+            <div id="edit-major-edit">
+                <div class="modal-body center">
+                    <p>Enter your major below.</p>
+                    <div class="form-label-group">
+                        <input type="text" id="edit-major-major" class="form-control" placeholder="Major" required>
+                        <label for="edit-major-major">Major</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <btn class="form-btn btn-lg btn-primary" id="edit-major-submit">Submit</btn>
+                </div>
+            </div>
+
+            <div hidden class="modal-body center" id="edit-major-wait">
+                <img src="/img/loading.gif" width="200" height="200" class="img-fluid" alt="Please Wait...">
+                <h4>Submitting...</h4>
+            </div>
+            <div hidden class="modal-body center" id="edit-major-success">
+                <h1>Success!</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editYearModal" tabindex="-1" role="dialog" aria-labelledby="editYearModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Year</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+
+            <div id="edit-year-edit">
+                <div class="modal-body center">
+                    <p>Select your year below.</p>
+                    <div class="form-group">
+                        <select class="form-control" id="edit-year-year" name="Year">
+              <option value="">Select Year</option>
+              <option>Undergraduate, Freshman</option>
+              <option>Undergraduate, Sophomore</option>
+              <option>Undergraduate, Junior</option>
+              <option>Undergraduate, Senior</option>
+              <option>Graduate</option>
+              <option>Not a student</option>
+            </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <btn class="form-btn btn-lg btn-primary" id="edit-year-submit">Submit</btn>
+                </div>
+            </div>
+
+            <div hidden class="modal-body center" id="edit-year-wait">
+                <img src="/img/loading.gif" width="200" height="200" class="img-fluid" alt="Please Wait...">
+                <h4>Submitting...</h4>
+            </div>
+            <div hidden class="modal-body center" id="edit-year-success">
+                <h1>Success!</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editResumeModal" tabindex="-1" role="dialog" aria-labelledby="editResumeModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Upload Resume</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+
+            <div id="edit-resume-edit">
+                <div class="modal-body center">
+                    <p>Upload your resume below.<br>Max 5MB limit. Only PDFs are accepted.</p>
+                    <p class="text-danger" id="edit-resume-warning"></p>
+                    <input hidden type="file" class="form-control-file" id="edit-resume-resume">
+                    <button type="button" class="form-btn btn-primary" id="edit-resume-choose">Upload Resume</button>
+                    <p id="edit-resume-details">No file chosen</p>
+                </div>
+                <div class="modal-footer">
+                    <btn class="form-btn btn-lg btn-primary" id="edit-resume-submit">Submit</btn>
+                </div>
+            </div>
+
+            <div hidden class="modal-body center" id="edit-resume-wait">
+                <img src="/img/loading.gif" width="200" height="200" class="img-fluid" alt="Please Wait...">
+                <h4>Uploading...</h4>
+            </div>
+            <div hidden class="modal-body center" id="edit-resume-success">
+                <h1>Success!</h1>
+            </div>
+        </div>
+    </div>
+</div>
