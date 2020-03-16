@@ -20,7 +20,7 @@ function FirebaseAuth() {
   this.resumeUpload = document.getElementById('edit-resume-choose');
   this.resumeFile = document.getElementById('edit-resume-resume');
   this.resumeSubmit = document.getElementById('edit-resume-submit');
-  this.permSubmit = document.getElementById('edit-perm-submit');
+  this.cwidSubmit = document.getElementById('edit-cwid-submit');
 
   // Add listeners for sign in buttons
   this.googleSignInButton.addEventListener('click', this.googleSignIn.bind(this));
@@ -33,7 +33,7 @@ function FirebaseAuth() {
   this.majorSubmit.addEventListener('click', this.editMajor.bind(this));
   this.yearSubmit.addEventListener('click', this.editYear.bind(this));
   this.resumeSubmit.addEventListener('click', this.editResume.bind(this));
-  this.permSubmit.addEventListener('click', this.editPerm.bind(this));
+  this.cwidSubmit.addEventListener('click', this.editCWID.bind(this));
 
   //Add listeners for resume upload
   this.resumeUpload.addEventListener('click', function(e) {
@@ -82,17 +82,20 @@ FirebaseAuth.prototype.signOut = function() {
 
 FirebaseAuth.prototype.onAuthStateChanged = function(user) {
   if(user) {
+    // Show account page
+    $('#account-page').removeAttr("hidden");
+
     //User is signed in! Get user ID and store
     var uid = firebase.auth().currentUser.uid;
     this.uid = uid;
 
-    //Get perm from user ID
+    //Get cwid from user ID
     this.database.ref('/accounts/' + uid + '/user').once('value').then((snapshot) => {
-      var perm = snapshot.val();
+      var cwid = snapshot.val();
 
-      if(perm) {
-        //Account is set up, store perm
-        this.perm = perm;
+      if(cwid) {
+        //Account is set up, store cwid
+        this.cwid = cwid;
 
         //Display data
         this.displayData();
@@ -117,11 +120,20 @@ FirebaseAuth.prototype.onAuthStateChanged = function(user) {
 };
 
 FirebaseAuth.prototype.displayData = function() {
-  var perm = this.perm;
+  var cwid = this.cwid;
 
   //Get user data and set on page
-  this.database.ref('/members/' + perm).once('value').then((snapshot) => {
+  this.database.ref('/members/' + cwid).once('value').then((snapshot) => {
     var userElement = snapshot.val();
+
+    //Show Dues Warning and Hide Resume Book/Event Data
+    if (!userElement.paidDues) {
+      $('#dues-warning').removeAttr("hidden");
+    }
+    else {
+      $('#resume-book').removeAttr("hidden");
+      $('#event-data').removeAttr("hidden");
+    }
 
     //Name
     var name = userElement.member.fname + " " + userElement.member.lname;
@@ -185,26 +197,34 @@ FirebaseAuth.prototype.displayData = function() {
     }
 
     //Membership Status
-    if(userElement.labMember == true) {
-      $('#membershipLevel').html("Lab Member");
-      $('#membershipLevel').attr("href", "/membership");
-      $('#account-status').html("Lab Member");
+    var pointText = " Points";
+    if(userElement.points == 1) {
+      pointText = " Point";
+    }
+    if(userElement.boardMember) {
+      $('#membershipLevel').html("Board Page");
+      $('#membershipLevel').attr("href", "/board");
+      $('#account-status').html("Board Member");
     }
     else {
-      $('#membershipLevel').html("Member");
-      $('#membershipLevel').attr("href", "/membership");
+      $('#membershipLevel').html('<i class="fas fa-atom" style="padding-right: 5px;"></i>' + userElement.points + pointText);
+      $('#membershipLevel').attr("href", "#points");
       $('#account-status').html("Member");
-      $('#account-status-edit').html('<a href="/membership">Purchase</a>');
     }
 
-    //Perm number
-    if(this.perm.substr(0,1) == "T") {
-      $('#account-perm').html("Not set.");
-      $('#account-perm-edit').html("<a href=\"javascript:void(0);\" onclick=\"$('#editPermModal').modal('show');\">Edit</a>");
+    //Add Points to Point and Events Section
+    $('#pointText').html(userElement.points + pointText);
+
+    //CWID number
+    if(this.cwid.substr(0,1) == "A") {
+      $('#account-cwid').html("Not set.");
+      $('#account-cwid-edit').html("<a href=\"javascript:void(0);\" onclick=\"$('#editCWIDModal').modal('show');\">Edit</a>");
     }
     else {
-      $('#account-perm').html("***" + this.perm.substr(3,6));
+      $('#account-cwid').html("***" + this.cwid.substr(3,8));
+      $('#account-cwid-edit').attr("style", "display: none;");
     }
+    
   });
 }
 
@@ -220,7 +240,7 @@ FirebaseAuth.prototype.editName = function() {
     updates['/fname'] = $('#edit-name-fname').val();
     updates['/lname'] = $('#edit-name-lname').val();
 
-    this.database.ref('/members/' + this.perm + '/member').update(updates, (error) => {
+    this.database.ref('/members/' + this.cwid + '/member').update(updates, (error) => {
       if(error) {
         //Print message to console
         console.log("Name update failed!");
@@ -262,7 +282,7 @@ FirebaseAuth.prototype.editEmail = function() {
     var updates = {};
     updates['/email'] = $('#edit-email-email').val();
 
-    this.database.ref('/members/' + this.perm + '/member/').update(updates, (error) => {
+    this.database.ref('/members/' + this.cwid + '/member/').update(updates, (error) => {
       if(error) {
         //Print message to console
         console.log("Email update failed!");
@@ -302,7 +322,7 @@ FirebaseAuth.prototype.editMajor = function() {
   var updates = {};
   updates['/major'] = $('#edit-major-major').val();
 
-  this.database.ref('/members/' + this.perm + '/member').update(updates, (error) => {
+  this.database.ref('/members/' + this.cwid + '/member').update(updates, (error) => {
     if(error) {
       //Print message to console
       console.log("Major update failed!");
@@ -338,7 +358,7 @@ FirebaseAuth.prototype.editYear = function() {
   var updates = {};
   updates['/year'] = $('#edit-year-year').val();
 
-  this.database.ref('/members/' + this.perm + '/member').update(updates, (error) => {
+  this.database.ref('/members/' + this.cwid + '/member').update(updates, (error) => {
     if(error) {
       //Print message to console
       console.log("Year update failed!");
@@ -409,7 +429,7 @@ FirebaseAuth.prototype.editResume = function() {
     var file = this.resumeFile.files[0];
 
     //Upload the image to Cloud Storage
-    this.storage.ref("/resume/" + this.perm + ".pdf").put(file).then((snapshot) => {
+    this.storage.ref("/resume/" + this.cwid + ".pdf").put(file).then((snapshot) => {
       //Get the URL of the uploaded file
       var url = snapshot.metadata.fullPath;
       // console.log("URL: " + url);
@@ -418,7 +438,7 @@ FirebaseAuth.prototype.editResume = function() {
       var updates = {};
       updates['/resume'] = url;
 
-      this.database.ref('/members/' + this.perm + '/member').update(updates, (error) => {
+      this.database.ref('/members/' + this.cwid + '/member').update(updates, (error) => {
         if(error) {
           //Print message to console
           console.log("Resume update failed!");
@@ -451,73 +471,75 @@ FirebaseAuth.prototype.editResume = function() {
   }
 };
 
-//Perm Submit Button Functions
-function submitPerm() {
-  //Check if PERM Number is a valid number
-  var perm = $('#edit-perm-perm').val();
+//CWID Submit Button Functions
+function submitCWID() {
+  //Check if CWID Number is a valid number
+  var cwid = $('#edit-cwid-cwid').val();
 
-  //Perform Regex on perm
-  if(perm.match(/[1-9][0-9]{6}/g) != null && perm.length == 7) {
+  //Perform Regex on cwid
+  if(cwid.match(/[1-9][0-9]{7}/g) != null && cwid.length == 8) {
     //Hide warning message
-    $('#edit-perm-warning').attr("hidden", true);
+    $('#edit-cwid-warning').attr("hidden", true);
 
-    //PERM Number is valid, set it in the confirmation screen
-    $('#edit-perm-display').html(perm);
+    //CWID Number is valid, set it in the confirmation screen
+    $('#edit-cwid-display').html(cwid);
 
     //Show confirmation div
-    $('#edit-perm-edit').attr("hidden", true);
-    $('#edit-perm-confirm').removeAttr("hidden");
+    $('#edit-cwid-edit').attr("hidden", true);
+    $('#edit-cwid-confirm').removeAttr("hidden");
   }
   else {
-    //PERM Number is not valid, display a warning message
-    $('#edit-perm-warning').removeAttr("hidden");
+    //CWID Number is not valid, display a warning message
+    $('#edit-cwid-warning').removeAttr("hidden");
   }
 }
 
-function editPerm() {
+function editCWID() {
   //Show edit div
-  $('#edit-perm-confirm').attr("hidden", true);
-  $('#edit-perm-edit').removeAttr("hidden");
+  $('#edit-cwid-confirm').attr("hidden", true);
+  $('#edit-cwid-edit').removeAttr("hidden");
 }
 
-FirebaseAuth.prototype.editPerm = function() {
+FirebaseAuth.prototype.editCWID = function() {
   //Show wait div
-  $('#edit-perm-confirm').attr("hidden", true);
-  $('#edit-perm-wait').removeAttr("hidden");
+  $('#edit-cwid-confirm').attr("hidden", true);
+  $('#edit-cwid-wait').removeAttr("hidden");
 
-  //Set newPerm and oldPerm
-  this.oldPerm = this.perm;
-  this.newPerm = $('#edit-perm-perm').val();
+  //Set newCWID and oldCWID
+  this.oldCWID = this.cwid;
+  this.newCWID = $('#edit-cwid-cwid').val();
 
-  //Send information to endpoint
-  var urlString = "https://us-central1-ucsb-ieee.cloudfunctions.net/editPerm?oldPerm=" + this.oldPerm + "&newPerm=" + this.newPerm + "&uid=" + this.uid;
+  this.database.ref('/accounts/' + this.uid).set({
+    user: this.newCWID
+  });
+  var cwidRef = this.database.ref('/members');
+  cwidRef.child(this.oldCWID).once('value').then((snapshot) => {
+    var data = snapshot.val();
+      //Update data
+      var updates = {};
+      updates[this.oldCWID] = null;
+      updates[this.newCWID] = data;
 
-  var settings = {
-    "async": true,
-    "crossDomain": true,
-    "headers": {
-      "Content-Type": "application/x-www-form-urlencoded"
-    },
-    "url": urlString,
-    "method": "GET"
-  };
+      cwidRef.update(updates, (error) => {
+      if(error) {
+        //Print message to console
+        console.log("CWID update failed!");
+        console.log("Error: " + error);
+        //An error occurred, show failed div
+        $('#edit-cwid-wait').attr("hidden", true);
+        $('#edit-cwid-error').html("Error: " + error);
+        $('#edit-cwid-failed').removeAttr("hidden");
+      }
+      else {
+        //Success! Show success div
+        $('#edit-cwid-wait').attr("hidden", true);
+        $('#edit-cwid-success').removeAttr("hidden");
 
-  $.ajax(settings).done(function(response) {
-    if(response.success == true) {
-      //PERM was successfully transferred, show success div
-      $('#edit-perm-wait').attr("hidden", true);
-      $('#edit-perm-success').removeAttr("hidden");
-
-      //Refresh page after 3 seconds
-      setTimeout(function() {
-        window.location.reload(true);
-      }, 3000);
-    }
-    else {
-      //An error occurred, show failed div
-      $('#edit-perm-wait').attr("hidden", true);
-      $('#edit-perm-error').html(response.error);
-      $('#edit-perm-failed').removeAttr("hidden");
-    }
-  }.bind(this));
+        //Refresh page after 3 seconds
+        setTimeout(function() {
+          window.location.reload(true);
+        }, 3000);
+      }
+    });
+  });
 };

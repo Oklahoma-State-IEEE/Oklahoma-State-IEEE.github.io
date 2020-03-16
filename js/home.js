@@ -99,7 +99,7 @@ FirebaseAuth.prototype.onAuthStateChanged = function(user) {
           //Get membership status
           if(userElement.boardMember == true) {
             $('#membershipLevel').html("Board Page");
-            $('#membershipLevel').attr("href", "/board");
+            $('#membershipLevel').attr("href", "/membership");
           }
           else {
             var pointText = " Points";
@@ -115,6 +115,7 @@ FirebaseAuth.prototype.onAuthStateChanged = function(user) {
         //Run account setup, passing the user object
         console.log("Redirect to new account");
         this.setupAccount(user);
+        this.labStatus(false);
       }
 
       //Hide sign-in button.
@@ -150,5 +151,47 @@ FirebaseAuth.prototype.onAuthStateChanged = function(user) {
 
     //Close new account modal, if open
     $('#newAccountModal').modal('hide');
+
+    //Display lab status
+    this.labStatus(false);
   }
 };
+
+FirebaseAuth.prototype.labStatus = function(labMember) {
+  //Turn off any existing listeners, if any
+  this.database.ref('/lab').off();
+  this.database.ref('/lab/open').off();
+
+  if(labMember) {
+    this.database.ref('/lab').on('value', (snapshot) => {
+      var labData = snapshot.val();
+      $("#lab-status-button").removeAttr("hidden");
+      $("#lab-status").removeClass("bg-success bg-danger");
+
+      if(labData.open) {
+        $("#lab-status").addClass("bg-success text-white");
+        $("#lab-status-text").html("The IEEE lab is currently open! Current Occupancy: " + Object.keys(labData.users).length);
+      }
+      else {
+        $("#lab-status").addClass("bg-danger text-white");
+        $("#lab-status-text").html("The IEEE lab is currently closed.");
+      }
+    });
+  }
+  else {
+    this.database.ref('/lab/open').on('value', (snapshot) => {
+      var open = snapshot.val();
+      $("#lab-status-button").attr("hidden", true);
+      $("#lab-status").removeClass("bg-success bg-danger");
+
+      if(open) {
+        $("#lab-status").addClass("bg-success text-white");
+        $("#lab-status-text").html("The IEEE lab is currently open!<br>Sign in to an IEEE lab member account to view more details.");
+      }
+      else {
+        $("#lab-status").addClass("bg-danger text-white");
+        $("#lab-status-text").html("The IEEE lab is currently closed.<br>Sign in to an IEEE lab member account to view more details.");
+      }
+    });
+  }
+}

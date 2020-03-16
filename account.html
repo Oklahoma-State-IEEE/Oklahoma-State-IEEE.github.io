@@ -4,8 +4,8 @@ title: My Account
 permalink: /account.html
 js: /js/account/index.js
 ---
-
-<div>
+<p hidden class="box-error" id="dues-warning">It appears you have not yet paid your membership dues. Please pay your dues in order to add your resume to the IEEE Resume Book and to earn Electron points!</p>
+<div hidden id="account-page">
   <h1>Profile</h1>
   <p>View and manage your profile settings here.</p>
   <p>Your profile is visible to organizers for any IEEE projects, competitions, and events you sign up for. IEEE's sponsors can also see your resume if you upload to the IEEE Resume book.</p>
@@ -31,19 +31,49 @@ js: /js/account/index.js
       <td class="table-right"><a href="javascript:void(0);" onclick="$('#editYearModal').modal('show');">Edit</a></td>
     </tr>
   </table>
-  <h1 id="ieee-resume-book">IEEE Resume Book</h1>
+  <h1>CWID Number</h1>
 
-  <p>Upload your resume here to be included in the IEEE Resume Book.</p>
+  <p>Manage your CWID Number here.</p>
 
-  <p>Your resume, along with your profile above, will be sent to IEEE’s sponsors, as well as organizers for any IEEE projects, competitions, and events you sign up for.</p>
+  <p>Your CWID Number is only used when you check into meetings, and is not shared with anyone outside of the IEEE Officer Board.</p>
 
   <table class="table">
-  	<tr>
-      <th scope="row" class="table-left">Resume</th>
-      <td class="table-center" id="account-resume"></td>
-      <td class="table-right"><a href="javascript:void(0);" onclick="$('#editResumeModal').modal('show');">Edit</a></td>
+    <tr>
+      <th scope="row" class="table-left">CWID Number</th>
+      <td class="table-center" id="account-cwid"></td>
+      <td class="table-right" id="account-cwid-edit"></td>
     </tr>
   </table>
+  <div hidden id="resume-book">
+    <h1 id="ieee-resume-book">IEEE Resume Book</h1>
+
+    <p>Upload your resume here to be included in the IEEE Resume Book.</p>
+
+    <p>Your resume, along with your profile above, will be sent to IEEE’s sponsors, as well as organizers for any IEEE projects, competitions, and events you sign up for.</p>
+
+    <table class="table">
+    	<tr>
+        <th scope="row" class="table-left">Resume</th>
+        <td class="table-center" id="account-resume"></td>
+        <td class="table-right"><a href="javascript:void(0);" onclick="$('#editResumeModal').modal('show');">Edit</a></td>
+      </tr>
+    </table>
+  </div>
+  <div hidden id="event-data">
+    <h1 id="event-data">Points & Events - <i class="fas fa-atom" style="padding-right: 5px;"></i><span id="pointText"></span></h1>
+    <p>Here you can see the list of all the events so far this year, whether you attended them, and how many Electron points that was worth.</p>
+    <p>Remember, for each Electron you get, you get an entry into the raffle at our Annual Spring Banquet!</p>
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="center" scope="col">Event Date</th>
+          <th class="center" scope="col">Event Title</th>
+          <th class="center" scope="col">Points</th>
+          <th class="center" scope="col">Attended</th>
+        </tr>
+      </thead>
+    </table>
+  </div>
 
   <h1>Contact Us</h1>
 
@@ -60,16 +90,16 @@ js: /js/account/index.js
             </div>
 
             <div id="edit-name-edit">
-                <div class="modal-body center">
-                    <p>Enter your name below.</p>
-                    <p class="text-danger" id="edit-name-warning"></p>
+                <div class="modal-body">
+                    <p class="center">Enter your name below.</p>
+                    <p class="text-danger center" id="edit-name-warning"></p>
                     <div class="form-label-group">
-                        <input type="text" id="edit-name-fname" class="form-control" placeholder="First Name" required>
-                        <label for="edit-name-fname">First Name</label>
+                      <label for="edit-name-fname">First Name</label>
+                      <input type="text" id="edit-name-fname" class="form-control" placeholder="First Name" required>
                     </div>
                     <div class="form-label-group">
-                        <input type="text" id="edit-name-lname" class="form-control" placeholder="Last Name" required>
-                        <label for="edit-name-lname">Last Name</label>
+                      <label for="edit-name-lname">Last Name</label>
+                      <input type="text" id="edit-name-lname" class="form-control" placeholder="Last Name" required>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -99,12 +129,12 @@ js: /js/account/index.js
             </div>
 
             <div id="edit-email-edit">
-                <div class="modal-body center">
-                    <p>Enter your email below.<br>This will be used for any IEEE announcements, as well as announcements for projects and events you sign up for.</p>
-                    <p class="text-danger" id="edit-email-warning"></p>
+                <div class="modal-body">
+                    <p class="center">Enter your email below.<br>This will be used for any IEEE announcements, as well as announcements for projects and events you sign up for.</p>
+                    <p class="text-danger center" id="edit-email-warning"></p>
                     <div class="form-label-group">
-                        <input type="email" id="edit-email-email" class="form-control" placeholder="Email" required>
-                        <label for="edit-email-email">Email</label>
+                      <label for="edit-email-email">Email</label>
+                      <input type="email" id="edit-email-email" class="form-control" placeholder="Email" required>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -134,11 +164,11 @@ js: /js/account/index.js
             </div>
 
             <div id="edit-major-edit">
-                <div class="modal-body center">
-                    <p>Enter your major below.</p>
+                <div class="modal-body">
+                    <p class="center">Enter your major below.</p>
                     <div class="form-label-group">
-                        <input type="text" id="edit-major-major" class="form-control" placeholder="Major" required>
-                        <label for="edit-major-major">Major</label>
+                      <label for="edit-major-major">Major</label>
+                      <input type="text" id="edit-major-major" class="form-control" placeholder="Major" required>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -209,11 +239,13 @@ js: /js/account/index.js
             </div>
 
             <div id="edit-resume-edit">
-                <div class="modal-body center">
-                    <p>Upload your resume below.<br>Max 5MB limit. Only PDFs are accepted.</p>
-                    <p class="text-danger" id="edit-resume-warning"></p>
+                <div class="modal-body">
+                    <p class="center">Upload your resume below.<br>Max 5MB limit. Only PDFs are accepted.</p>
+                    <p class="text-danger center" id="edit-resume-warning"></p>
                     <input hidden type="file" class="form-control-file" id="edit-resume-resume">
+                    <p class="center">
                     <button type="button" class="form-btn btn-primary" id="edit-resume-choose">Upload Resume</button>
+                    </p>
                     <p id="edit-resume-details">No file chosen</p>
                 </div>
                 <div class="modal-footer">
@@ -230,4 +262,57 @@ js: /js/account/index.js
             </div>
         </div>
     </div>
+</div>
+<div class="modal fade" id="editCWIDModal" tabindex="-1" role="dialog" aria-labelledby="editCWIDModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit CWID Number</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div id="edit-cwid-edit">
+        <div class="modal-body">
+          <p class="center">Enter your CWID Number below.<br><span class="text-danger">NOTE: Once you set your CWID number, you cannot edit it again. Please verify that you enter your CWID number correctly.</span></p>
+          <p hidden class="text-danger center" id="edit-cwid-warning">Please enter a valid CWID Number.</p>
+          <div class="form-label-group">
+            <label for="edit-cwid-cwid">CWID Number</label>
+            <input type="number" pattern="[1-9][0-9]{8}" id="edit-cwid-cwid" class="form-control" placeholder="CWID Number" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <btn class="form-btn btn-lg btn-primary" onclick="submitCWID()">Submit</btn>
+        </div>
+      </div>
+
+      <div hidden id="edit-cwid-confirm">
+        <div class="modal-body center">
+          <p>This is your CWID Number:</p>
+          <h3 id="edit-cwid-display"></h3>
+          <p>Is this correct? Please verify that you have entered your CWID number correctly. You will not be able to edit it again.</p>
+        </div>
+        <div class="modal-footer">
+          <btn class="form-btn btn-lg btn-primary" onclick="editCWID()">Back</btn>
+          <btn class="form-btn btn-lg btn-primary" id="edit-cwid-submit">Submit</btn>
+        </div>
+      </div>
+
+      <div hidden class="modal-body center" id="edit-cwid-wait">
+        <img src="/img/loading.gif" width="200" height="200" class="img-fluid" alt="Please Wait...">
+        <h4>Submitting...</h4>
+      </div>
+      <div hidden class="modal-body center" id="edit-cwid-success">
+        <h1>Success!</h1>
+        <h4>We'll take you back to your page momentarily...</h4>
+      </div>
+      <div hidden class="modal-body center" id="edit-cwid-failed">
+        <h1>Oops, something happened!</h1>
+        <p>Here's the error that occurred:</p>
+        <p id="edit-cwid-error"></p>
+        <p>Refresh the page and try again. If the issue persists, talk to an IEEE officer.</p>
+      </div>
+    </div>
+  </div>
 </div>

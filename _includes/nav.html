@@ -32,7 +32,7 @@
           <li><a href="{{ link[1] | relative_url }}">{{ link[0] }}</a></li>
         {%- endif -%}
       {%- endfor -%}
-      <li><a href="javascript:void(0);" data-toggle="modal" data-target="#loginModal">Sign In</a></li>
+      <li><a href="javascript:void(0);" data-toggle="modal" data-target="#loginModal" id="sign-in-li">Sign In</a></li>
       <li hidden class="navlinks-container" id="user-li">
         <a class="navlinks-parent" href="javascript:void(0);" id="userDropdown" data-toggle="dropdown">User</a>
         <div class="navlinks-children" aria-labelledby="userDropdown">

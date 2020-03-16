@@ -29,23 +29,24 @@ FirebaseAuth.prototype.createAccount = function() {
     $('#newaccount-new').attr("hidden", true);
     $('#newaccount-wait').removeAttr("hidden");
 
-    //Get and set new temp perm
-    var tempPerm = "T" + randomString(8, '0123456789');
-    this.perm = tempPerm;
+    //Get and set new temp cwid
+    var tempCWID = "A" + randomString(8, '0123456789');
+    this.cwid = tempCWID;
 
-    //Check to see if this temp perm is empty
-    this.database.ref('/members/' + tempPerm).once('value').then((snapshot) => {
+    //Check to see if this temp cwid is empty
+    this.database.ref('/members/' + tempCWID).once('value').then((snapshot) => {
       if(snapshot.val() == null) {
         //Create account under accounts branch
         this.database.ref('/accounts/' + this.uid).set({
-          user: this.perm
+          user: this.cwid
         });
 
         //Create account under members branch
         var newMember = {
           activated: true,
-          labMember: false,
-          agreedToLabRules: false,
+          boardMember: false,
+          paidDues: false,
+          points: 0,
           member: {
             fname: $('#newaccount-fname').val(),
             lname: $('#newaccount-lname').val(),
@@ -53,7 +54,7 @@ FirebaseAuth.prototype.createAccount = function() {
           }
         };
 
-        this.database.ref('/members/' + this.perm).set(newMember, (error) => {
+        this.database.ref('/members/' + this.cwid).set(newMember, (error) => {
           if(error) {
             $('#newaccount-wait').attr("hidden", true);
             $('#newaccount-error').html(error);

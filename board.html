@@ -1,0 +1,228 @@
+---
+layout: page
+title: Board
+permalink: /board.html
+js: /js/board/index.js
+---
+<div hidden id="board-page">
+  <h1>Board Actions</h1>
+  <p>View and manage various site settings here. Please follow the documentation provided in the shared drive!</p>
+  <h3>Create Event</h3>
+  <button class="btn-primary" onclick="$('#createEventModal').modal('show');">Create</button>
+  <h3>Paid Dues</h3>
+  <button class="btn-primary" onclick="$('#paidDuesModal').modal('show');">Paid</button>
+  <h3>Assign Board Member Access</h3>
+  <button class="btn-primary" onclick="$('#assignBoardModal').modal('show');">Assign</button>
+  <hr>
+  <h2>Danger Zone</h2>
+  <h3>Remove Board Access</h3>
+  <button class="btn-primary" onclick="$('#removeBoardModal').modal('show');">Remove</button>
+  <h3>Clear Dues Paid</h3>
+  <button class="btn-primary" onclick="$('#clearDuesModal').modal('show');">Clear</button>
+  <h3>Clear Points</h3>
+  <button class="btn-primary" onclick="$('#clearPointsModal').modal('show');">Clear</button>
+</div>
+<div class="modal fade" id="createEventModal" tabindex="-1" role="dialog" aria-labelledby="createEventModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create Event</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+
+            <div id="create-event-edit">
+                <div class="modal-body">
+                  <p class="center">Enter event details below.</p>
+                  <p class="text-danger center" id="create-event-warning"></p>
+                  <div class="form-label-group">
+                    <label for="create-event-date">Date (MM-DD-YYYY)</label>
+                    <input type="text" id="create-event-date" class="form-control" placeholder="MM-DD-YYYY" required>
+                  </div>
+                  <div class="form-label-group">
+                    <label for="create-event-name">Short Event Name</label>
+                    <input type="text" id="create-event-name" class="form-control" placeholder="Short Name" required>
+                  </div>
+                  <div class="form-label-group">
+                    <label for="create-event-points">Points</label>
+                    <input type="text" id="create-event-points" class="form-control" placeholder="1" required>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                    <btn class="form-btn btn-lg btn-primary" id="create-event-submit">Submit</btn>
+                </div>
+            </div>
+
+            <div hidden class="modal-body center" id="create-event-wait">
+                <img src="/img/loading.gif" width="200" height="200" class="img-fluid" alt="Please Wait...">
+                <h4>Submitting...</h4>
+            </div>
+            <div hidden class="modal-body center" id="create-event-success">
+                <h1>Success!</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="paidDuesModal" tabindex="-1" role="dialog" aria-labelledby="paidDuesModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Paid Dues</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+
+            <div id="paid-dues-edit">
+                <div class="modal-body">
+                    <p class="center">Enter the CWID for the member who paid dues.</p>
+                    <p class="text-danger center" id="paid-dues-warning"></p>
+                    <div class="form-label-group">
+                      <label for="paid-dues-cwid">CWID</label>
+                      <input type="text" id="paid-dues-cwid" class="form-control" placeholder="CWID" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <btn class="form-btn btn-lg btn-primary" id="paid-dues-submit">Submit</btn>
+                </div>
+            </div>
+
+            <div hidden class="modal-body center" id="paid-dues-wait">
+                <img src="/img/loading.gif" width="200" height="200" class="img-fluid" alt="Please Wait...">
+                <h4>Submitting...</h4>
+            </div>
+            <div hidden class="modal-body center" id="paid-dues-success">
+                <h1>Success!</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="assignBoardModal" tabindex="-1" role="dialog" aria-labelledby="assignBoardModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Assign Board Access</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+
+            <div id="assign-board-edit">
+                <div class="modal-body">
+                    <p class="center">Enter the CWID for the new board member.</p>
+                    <p class="text-danger center" id="assign-board-warning"></p>
+                    <div class="form-label-group">
+                      <label for="assign-board-cwid">CWID</label>
+                      <input type="text" id="paid-dues-cwid" class="form-control" placeholder="CWID" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <btn class="form-btn btn-lg btn-primary" id="assign-board-submit">Assign</btn>
+                </div>
+            </div>
+
+            <div hidden class="modal-body center" id="assign-board-wait">
+                <img src="/img/loading.gif" width="200" height="200" class="img-fluid" alt="Please Wait...">
+                <h4>Submitting...</h4>
+            </div>
+            <div hidden class="modal-body center" id="assign-board-success">
+                <h1>Success!</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="removeBoardModal" tabindex="-1" role="dialog" aria-labelledby="removeBoardModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Remove Board Access</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+
+            <div id="remove-board-edit">
+                <div class="modal-body">
+                    <p class="center">Enter the CWID of the member losing board access.</p>
+                    <p class="text-danger center" id="remove-board-warning"></p>
+                    <div class="form-label-group">
+                      <label for="remove-board-cwid">CWID</label>
+                      <input type="text" id="remove-board-cwid" class="form-control" placeholder="CWID" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <btn class="form-btn btn-lg btn-primary" id="remove-board-submit">Submit</btn>
+                </div>
+            </div>
+
+            <div hidden class="modal-body center" id="remove-board-wait">
+                <img src="/img/loading.gif" width="200" height="200" class="img-fluid" alt="Please Wait...">
+                <h4>Submitting...</h4>
+            </div>
+            <div hidden class="modal-body center" id="remove-board-success">
+                <h1>Success!</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="clearDuesModal" tabindex="-1" role="dialog" aria-labelledby="clearDuesModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Clear Dues</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+
+            <div id="clear-dues-edit">
+                <div class="modal-body">
+                    <p class="center"><span class="text-danger">This will remove the dues status for all members!<br/>Please export the membership list before running!</span></p>
+                    <p class="text-danger center" id="clear-dues-warning"></p>
+                </div>
+                <div class="modal-footer">
+                    <btn class="form-btn btn-lg btn-primary" id="clear-dues-submit">Clear</btn>
+                </div>
+            </div>
+
+            <div hidden class="modal-body center" id="clear-dues-wait">
+                <img src="/img/loading.gif" width="200" height="200" class="img-fluid" alt="Please Wait...">
+                <h4>Submitting...</h4>
+            </div>
+            <div hidden class="modal-body center" id="clear-dues-success">
+                <h1>Success!</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="clearPointsModal" tabindex="-1" role="dialog" aria-labelledby="clearPointsModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Clear Points</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+
+            <div id="clear-points-edit">
+                <div class="modal-body">
+                    <p class="center"><span class="text-danger">This will remove the points for all members!<br/>Please export the membership list before running!</span></p>
+                    <p class="text-danger center" id="clear-points-warning"></p>
+                </div>
+                <div class="modal-footer">
+                    <btn class="form-btn btn-lg btn-primary" id="clear-points-submit">Clear</btn>
+                </div>
+            </div>
+
+            <div hidden class="modal-body center" id="clear-points-wait">
+                <img src="/img/loading.gif" width="200" height="200" class="img-fluid" alt="Please Wait...">
+                <h4>Submitting...</h4>
+            </div>
+            <div hidden class="modal-body center" id="clear-points-success">
+                <h1>Success!</h1>
+            </div>
+        </div>
+    </div>
+</div>

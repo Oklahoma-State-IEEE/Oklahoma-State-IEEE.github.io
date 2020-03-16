@@ -1595,6 +1595,9 @@ pre code {
   display: flex;
   flex-wrap: wrap;
 }
+#footer .row {
+  justify-content: center;
+}
 .col {
   flex-basis: 0;
   flex-grow: 1;
@@ -3080,6 +3083,11 @@ fieldset[disabled] .btn-default.active {
   color: #fff;
   background-color: #337ab7;
   border-color: #2e6da4;
+  cursor: pointer;
+  padding: 10px 16px;
+  font-size: 18px;
+  line-height: 1.3333333;
+  border-radius: 6px;
 }
 .btn-primary:hover,
 .btn-primary:focus,

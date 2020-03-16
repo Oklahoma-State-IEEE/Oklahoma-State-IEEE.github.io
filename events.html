@@ -2,23 +2,36 @@
 layout: page
 title: Events
 permalink: /events.html
+js: /js/firebaseauth.js
 ---
 
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"
 integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="  crossorigin="anonymous"></script>
 <script type="text/javascript" src="/js/moment.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.2.0/fullcalendar.min.js"></script>
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.2.0/fullcalendar.min.css">
-<link rel="stylesheet" media="print" href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.2.0/fullcalendar.print.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/core/main.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/interaction/main.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/daygrid/main.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/timegrid/main.min.js"></script>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/core/main.min.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/daygrid/main.min.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/timegrid/main.min.css">
 
 <script>
-$(document).ready(function() {
+	document.addEventListener('DOMContentLoaded', function() {
+	        var calendarEl = document.getElementById('calendar');
 
-	$('#calendar').fullCalendar({
-		events:'/calendar-data'
-	})
+	        var calendar = new FullCalendar.Calendar(calendarEl, {
+	          plugins: [ 'interaction', 'dayGrid', 'timeGrid' ],
+						header: {
+				      left: 'prev,next today',
+				      center: 'title',
+				      right: 'dayGridMonth,timeGridWeek'
+				    },
+						events: '/calendar-data'
+	        });
 
-});
+	        calendar.render();
+	      });
 
 </script>
 
@@ -26,7 +39,7 @@ $(document).ready(function() {
 <div class="posts-list">
   {% for event in site.events %}
 		{% assign current_date = 'now' | date: '%s' %}
-		{% assign event_formatted_date = event.event_date | date: '%s' %}
+		{% assign event_formatted_date = event.event_starttime | date: '%s' %}
 		{% if event_formatted_date > current_date %}
 		  <article class="post-preview">
 		    <a href="{{ event.url | relative_url }}">
@@ -48,11 +61,17 @@ $(document).ready(function() {
 		      </div>
 		      {% endif %}
 		      <div class="post-entry">
-		        {{ event.excerpt | strip_html | xml_escape | truncatewords: site.excerpt_length }}
-		        {% assign excerpt_word_count = event.excerpt | number_of_words %}
-		        {% if event.content != event.excerpt or excerpt_word_count > site.excerpt_length %}
-		          <a href="{{ event.url | relative_url }}" class="post-read-more">[Read&nbsp;More]</a>
-		        {% endif %}
+						{% if event.normal_date_time %}
+			        <p class="event-meta">{{ event.normal_date_time }}</p>
+			      {% endif %}
+						{% if event.location %}
+			        <p class="event-meta">{{ event.location }}</p>
+			      {% endif %}
+						{% if event.address %}
+			        <p class="event-meta">{{ event.address }}</p>
+			      {% endif %}
+						<hr>
+		        {{ event.short-description }}
 		      </div>
 		    </div>
 

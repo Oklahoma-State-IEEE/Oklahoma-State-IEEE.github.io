@@ -2,6 +2,104 @@
 layout: page
 title: OSU IEEE
 subtitle: Institute of Electrical and Electronics Engineers
-#image: /img/path.jpg Replaces the image in the header circle
-#bigimg: /img/path.jpg Adds a large background image behind the title and subtitle text
+js: /js/home.js
 ---
+<div id="home">
+  <h1>Welcome to OSU IEEE!</h1>
+  <p>IEEE is the world’s largest professional organization devoted to advancements in technological fields such as electrical engineering, computer engineering, and computer science. With over 365,000 members and 1,570 global chapters, members can effectively network in their areas of interest and future profession.</p>
+  <div class="posts-list">
+    {% for event in site.events limit:1 %}
+  		{% assign current_date = 'now' | date: '%s' %}
+  		{% assign event_formatted_date = event.event_date | date: '%s' %}
+  		{% if event_formatted_date > current_date %}
+        <h2>Our Next Event</h2>
+  		  <article class="post-preview">
+  		    <a href="{{ event.url | relative_url }}">
+  			  <h3 class="post-title">{{ event.title }}</h3>
+
+  			  {% if post.subtitle %}
+  			  <h4 class="post-subtitle">
+  			    {{ post.subtitle }}
+  			  </h4>
+  			  {% endif %}
+  		    </a>
+
+  		    <div class="post-entry-container">
+  		      {% if event.image %}
+  		      <div class="post-image">
+  		        <a href="{{ event.url | relative_url }}">
+  		          <img src="{{ event.image | relative_url }}">
+  		        </a>
+  		      </div>
+  		      {% endif %}
+  		      <div class="post-entry">
+  		        {{ event.excerpt | strip_html | xml_escape | truncatewords: site.excerpt_length }}
+  		        {% assign excerpt_word_count = event.excerpt | number_of_words %}
+  		        {% if event.content != event.excerpt or excerpt_word_count > site.excerpt_length %}
+  		          <a href="{{ event.url | relative_url }}" class="post-read-more">[Read&nbsp;More]</a>
+  		        {% endif %}
+  		      </div>
+  		    </div>
+
+  		   </article>
+  		{% endif %}
+    {% endfor %}
+  </div>
+
+  <h2>Sponsors</h2>
+  <p>Our mission is to enable students to learn about emerging issues in the technology industry through technical workshops, competitions, and mentorship. As part of this mission, we provide our members with a lounge to study in as well as networking opportunities with various companies.
+    <br/><br/>
+    Interested in working with us? Check out our <a href="/sponsors">sponsorship page</a> or <a href="mailto:ieee@okstate.edu">email us</a> to learn more!
+  </p>
+</div>
+  <div class="modal fade" id="newAccountModal" tabindex="-1" role="dialog" aria-labelledby="newAccountModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">New Account</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div id="newaccount-new">
+        <div class="modal-body">
+          <h4 class="center">Welcome to OSU IEEE. Let's get you set up!</h4>
+          <p class="center">Become a member by filling in the fields below.<br>If you are already a member, <a href="javascript:void(0);" id="newaccount-signout">sign out</a> and sign in with your original account.</p>
+          <p hidden class="text-danger" id="newaccount-warning">Please complete all text fields.</p>
+          <div class="form-label-group">
+            <label for="newaccount-fname">First Name</label>
+            <input type="text" id="newaccount-fname" class="form-control" placeholder="First Name" required autofocus>
+          </div>
+          <div class="form-label-group">
+            <label for="newaccount-lname">Last Name</label>
+            <input type="text" id="newaccount-lname" class="form-control" placeholder="Last Name" required>
+          </div>
+          <div class="form-label-group">
+            <label for="newaccount-email">Email</label>
+            <input type="email" id="newaccount-email" class="form-control" placeholder="Email" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" value="submit" class="form-btn btn-lg btn-primary" id="newaccount-submit">Set Up Account</button>
+        </div>
+      </div>
+
+      <div hidden class="modal-body center" id="newaccount-wait">
+        <img src="/img/loading.gif" width="200" height="200" class="img-fluid" alt="Please Wait...">
+        <h4>Setting up your account...</h4>
+      </div>
+
+      <div hidden class="modal-body center" id="newaccount-success">
+        <h1>Your account is ready!</h1>
+        <h4>Thanks for becoming an IEEE member!<br>We'll take you back to your page momentarily...</h4>
+      </div>
+
+      <div hidden class="modal-body center" id="newaccount-failed">
+        <h1>Oops, something happened!</h1>
+        <p>Here's the error that occurred:</p>
+        <p id="newaccount-error"></p>
+        <p>Refresh the page and try again. If the issue persists, talk to an IEEE officer.</p>
+      </div>
+    </div>
+  </div>
+</div>
