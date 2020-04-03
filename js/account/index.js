@@ -121,7 +121,7 @@ FirebaseAuth.prototype.onAuthStateChanged = function(user) {
 
 FirebaseAuth.prototype.displayData = function() {
   var cwid = this.cwid;
-
+  var eventRef = this.database.ref('/events');
   //Get user data and set on page
   this.database.ref('/members/' + cwid).once('value').then((snapshot) => {
     var userElement = snapshot.val();
@@ -168,34 +168,6 @@ FirebaseAuth.prototype.displayData = function() {
       $('#account-resume').html("Not uploaded.");
     }
 
-    //GitHub
-    if(userElement.member.github) {
-      //Get GitHub username from ID
-      var urlString = "https://api.github.com/user/" + userElement.member.github.id;
-
-      var settings = {
-        "async": true,
-        "crossDomain": true,
-        "url": urlString,
-        "method": "GET"
-      };
-
-      $.ajax(settings).done((response) => {
-        $('#account-github').html('<a href="' + response.html_url + '" target="_blank">@' + response.login + '</a>');
-      });
-    }
-    else {
-      $('#account-github').html("Not linked.");
-    }
-
-    //Discord
-    if(userElement.member.discord) {
-      $('#account-discord').html(userElement.member.discord.username + "#" + userElement.member.discord.discriminator);
-    }
-    else {
-      $('#account-discord').html("Not linked.");
-    }
-
     //Membership Status
     var pointText = " Points";
     if(userElement.points == 1) {
@@ -224,7 +196,43 @@ FirebaseAuth.prototype.displayData = function() {
       $('#account-cwid').html("***" + this.cwid.substr(3,8));
       $('#account-cwid-edit').attr("style", "display: none;");
     }
-    
+
+    //Event stuff
+    eventRef.once('value', (eventSnapshot) => {
+      var content = '';
+      if(userElement.paidDues) {
+        content = '<tr><td class="center">N/A</td><td class="center">Membership Dues</td><td class="center">1</td><td class="center"><i class="fas fa-check" aria-hidden="true"></td></tr>';
+      }
+      eventSnapshot.forEach((data) => {
+        var val = data.val();
+        var date_name = data.key;
+        var date = date_name.substring(0,10);
+        var formattedDate = date.substring(date.length - 5).concat('-',date.substring(0,4));
+        var title = date_name.substring(11,50);
+        var points = val.points;
+
+        var eventID = val.eventID;
+        var attendedBool;
+        this.database.ref('/members/' + this.cwid + '/events/' + eventID).once('value').then((eventSnap) => {
+          attendedBool = eventSnap.val();
+          var attended;
+          if(attendedBool) {
+            attended = '<i class="fas fa-check" aria-hidden="true">';
+          }
+          else {
+            attended = '<i class="fas fa-times" aria-hidden="true">';
+          }
+          content += '<tr>';
+          content += '<td class="center">' + formattedDate + '</td>';
+          content += '<td class="center">' + title + '</td>';
+          content += '<td class="center">' + points + '</td>';
+          content += '<td class="center">' + attended + '</td>';
+          content += '</tr>';
+          $('#eventTable').append(content);
+          content = "";
+        });
+      });
+    });
   });
 }
 
@@ -428,40 +436,44 @@ FirebaseAuth.prototype.editResume = function() {
     //Get the file
     var file = this.resumeFile.files[0];
 
-    //Upload the image to Cloud Storage
-    this.storage.ref("/resume/" + this.cwid + ".pdf").put(file).then((snapshot) => {
-      //Get the URL of the uploaded file
-      var url = snapshot.metadata.fullPath;
-      // console.log("URL: " + url);
+    this.database.ref('/members/' + this.cwid + "/member").once('value').then((snapshot) => {
+      var userElement = snapshot.val();
 
-      //Record this URL in the database
-      var updates = {};
-      updates['/resume'] = url;
+      //Upload the image to Cloud Storage
+      this.storage.ref("/resumes/" + userElement.year + "/" + userElement.lname + ", " + userElement.fname + ".pdf").put(file).then((snapshot) => {
+        //Get the URL of the uploaded file
+        var url = snapshot.metadata.fullPath;
+        // console.log("URL: " + url);
 
-      this.database.ref('/members/' + this.cwid + '/member').update(updates, (error) => {
-        if(error) {
-          //Print message to console
-          console.log("Resume update failed!");
-          console.log("Error: " + error);
-        }
-        else {
-          //Success! Show success div
-          $('#edit-resume-wait').attr("hidden", true);
-          $('#edit-resume-success').removeAttr("hidden");
+        //Record this URL in the database
+        var updates = {};
+        updates['/resume'] = url;
 
-          //Run displayData to refresh items on page
-          this.displayData();
+        this.database.ref('/members/' + this.cwid + '/member').update(updates, (error) => {
+          if(error) {
+            //Print message to console
+            console.log("Resume update failed!");
+            console.log("Error: " + error);
+          }
+          else {
+            //Success! Show success div
+            $('#edit-resume-wait').attr("hidden", true);
+            $('#edit-resume-success').removeAttr("hidden");
 
-          //Show edit div and dismiss modal
-          setTimeout(function() {
-            $('#editResumeModal').modal('hide');
-          }.bind(this), 1000);
+            //Run displayData to refresh items on page
+            this.displayData();
 
-          setTimeout(function() {
-            $('#edit-resume-success').attr("hidden", true);
-            $('#edit-resume-edit').removeAttr("hidden");
-          }, 1500);
-        }
+            //Show edit div and dismiss modal
+            setTimeout(function() {
+              $('#editResumeModal').modal('hide');
+            }.bind(this), 1000);
+
+            setTimeout(function() {
+              $('#edit-resume-success').attr("hidden", true);
+              $('#edit-resume-edit').removeAttr("hidden");
+            }, 1500);
+          }
+        });
       });
     });
   }

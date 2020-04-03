@@ -7,20 +7,43 @@ js: /js/board/index.js
 <div hidden id="board-page">
   <h1>Board Actions</h1>
   <p>View and manage various site settings here. Please follow the documentation provided in the shared drive!</p>
-  <h3>Create Event</h3>
-  <button class="btn-primary" onclick="$('#createEventModal').modal('show');">Create</button>
-  <h3>Paid Dues</h3>
-  <button class="btn-primary" onclick="$('#paidDuesModal').modal('show');">Paid</button>
-  <h3>Assign Board Member Access</h3>
-  <button class="btn-primary" onclick="$('#assignBoardModal').modal('show');">Assign</button>
-  <hr>
-  <h2>Danger Zone</h2>
-  <h3>Remove Board Access</h3>
-  <button class="btn-primary" onclick="$('#removeBoardModal').modal('show');">Remove</button>
-  <h3>Clear Dues Paid</h3>
-  <button class="btn-primary" onclick="$('#clearDuesModal').modal('show');">Clear</button>
-  <h3>Clear Points</h3>
-  <button class="btn-primary" onclick="$('#clearPointsModal').modal('show');">Clear</button>
+  <div id="board-col">
+    <div id="left-col">
+      <h2>Events</h2>
+      <h4>Event Check-In</h4>
+      <button class="btn-primary" onclick="$('#eventCheckInModal').modal('show');">Check-In</button>
+      <h4>Create Event</h4>
+      <button class="btn-primary" onclick="$('#createEventModal').modal('show');">Create</button>
+    </div>
+    <div id="center-col">
+      <h2>Management</h2>
+      <h4>Paid Dues</h4>
+      <button class="btn-primary" onclick="$('#paidDuesModal').modal('show');">Paid</button>
+      <h4>Assign Board Access</h4>
+      <button class="btn-primary" onclick="$('#assignBoardModal').modal('show');">Assign</button>
+    </div>
+    <div id="right-col">
+      <h2>Reports</h2>
+      <h4>Pull Resume Book</h4>
+      <button class="btn-primary" onclick="">Pull</button>
+      <h4>Export Event Attendance</h4>
+      <button class="btn-primary" onclick="$('#exportEventModal').modal('show');">Export</button>
+      <h4>Export Members</h4>
+      <button class="btn-primary" onclick="$('#exportMembersModal').modal('show');">Export</button>
+    </div>
+  </div>
+    <hr>
+  <div id="board-lower-col">
+    <div id="lower-col">
+      <h2>Danger Zone</h2>
+      <h4>Remove Board Access</h4>
+      <button class="btn-primary" onclick="$('#removeBoardModal').modal('show');">Remove</button>
+      <h4>Clear Dues Paid</h4>
+      <button class="btn-primary" onclick="$('#clearDuesModal').modal('show');">Clear</button>
+      <h4>Clear Points</h4>
+      <button class="btn-primary" onclick="$('#clearPointsModal').modal('show');">Clear</button>
+    </div>
+  </div>
 </div>
 <div class="modal fade" id="createEventModal" tabindex="-1" role="dialog" aria-labelledby="createEventModal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -46,7 +69,7 @@ js: /js/board/index.js
                   </div>
                   <div class="form-label-group">
                     <label for="create-event-points">Points</label>
-                    <input type="text" id="create-event-points" class="form-control" placeholder="1" required>
+                    <input type="text" id="create-event-points" class="form-control" placeholder="Points" required>
                   </div>
                 </div>
                 <div class="modal-footer">
@@ -93,6 +116,54 @@ js: /js/board/index.js
                 <h4>Submitting...</h4>
             </div>
             <div hidden class="modal-body center" id="paid-dues-success">
+                <h1>Success!</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="eventCheckInModal" tabindex="-1" role="dialog" aria-labelledby="eventCheckInModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Event Check-In</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div id="event-checkin-edit">
+                <div class="modal-body center">
+                    <p>Select the event below.</p>
+                    <p hidden class="text-danger center" id="event-checkin-warning">Please choose an event.</p>
+                    <div class="form-group">
+                        <select class="form-control" id="event-checkin-event" name="Event">
+                          <option value="">Select Event</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <btn class="form-btn btn-lg btn-primary" onclick="nextEventPage()">Next</btn>
+                </div>
+            </div>
+
+            <div hidden id="event-checkin-confirm">
+              <div class="modal-body">
+                <p class="center">Check-In To This Event:</p>
+                <h3 class="center" id="event-checkin-display"></h3>
+                <label for="event-checkin-cwid">CWID</label>
+                <input type="text" id="event-checkin-cwid" class="form-control" placeholder="CWID" required>
+              </div>
+              <div class="modal-footer">
+                <btn class="form-btn btn-lg btn-primary" onclick="eventCheckIn()">Back</btn>
+                <btn class="form-btn btn-lg btn-primary" id="event-checkin-submit">Submit</btn>
+              </div>
+            </div>
+
+            <div hidden class="modal-body center" id="event-checkin-wait">
+                <img src="/img/loading.gif" width="200" height="200" class="img-fluid" alt="Please Wait...">
+                <h4>Submitting...</h4>
+            </div>
+            <div hidden class="modal-body center" id="event-checkin-success">
                 <h1>Success!</h1>
             </div>
         </div>
@@ -222,6 +293,85 @@ js: /js/board/index.js
             </div>
             <div hidden class="modal-body center" id="clear-points-success">
                 <h1>Success!</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="exportEventModal" tabindex="-1" role="dialog" aria-labelledby="exportEventModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Export Event</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div id="export-event-edit">
+                <div class="modal-body center">
+                    <p>Select the event below.</p>
+                    <p hidden class="text-danger center" id="export-event-warning">Please choose an event.</p>
+                    <div class="form-group">
+                        <select class="form-control" id="event-export-event" name="Event">
+                          <option value="">Select Event</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <btn class="form-btn btn-lg btn-primary" onclick="nextEventReportPage()">Next</btn>
+                </div>
+            </div>
+
+            <div hidden id="export-event-confirm">
+              <div class="modal-body">
+                <p class="center">Download Attendance For This Event:</p>
+                <h3 class="center" id="export-event-display"></h3>
+                    <p class="center">This will produce a CSV file of all of the members that attended this event.</p>
+              </div>
+              <div class="modal-footer">
+                <btn class="form-btn btn-lg btn-primary" onclick="eventExportBack()">Back</btn>
+                <btn class="form-btn btn-lg btn-primary" id="export-event-submit">Export</btn>
+              </div>
+            </div>
+
+            <div hidden class="modal-body center" id="export-event-wait">
+                <img src="/img/loading.gif" width="200" height="200" class="img-fluid" alt="Please Wait...">
+                <h4>Exporting...</h4>
+            </div>
+            <div hidden class="modal-body center" id="export-event-success">
+                <h1>Success!</h1>
+                <a href="" download="eventAttendance.csv" target="blank" id="export-event-link">Download Event Attendance</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="exportMembersModal" tabindex="-1" role="dialog" aria-labelledby="exportMembersModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Export Members</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+
+            <div id="export-members-edit">
+                <div class="modal-body">
+                    <p class="center">This will produce a CSV file of all of the members and their dues status.</p>
+                    <p class="text-danger center" id="export-members-warning"></p>
+                </div>
+                <div class="modal-footer">
+                    <btn class="form-btn btn-lg btn-primary" id="export-members-submit">Export</btn>
+                </div>
+            </div>
+
+            <div hidden class="modal-body center" id="export-members-wait">
+                <img src="/img/loading.gif" width="200" height="200" class="img-fluid" alt="Please Wait...">
+                <h4>Exporting...</h4>
+            </div>
+            <div hidden class="modal-body center" id="export-members-success">
+                <h1>Success!</h1>
+                <a href="" download="membersList.csv" target="blank" id="export-members-link">Download Members</a>
             </div>
         </div>
     </div>

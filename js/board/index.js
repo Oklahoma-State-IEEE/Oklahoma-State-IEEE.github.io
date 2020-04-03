@@ -14,11 +14,15 @@ function FirebaseAuth() {
 
   //Edit fields and submit buttons
   this.duesSubmit = document.getElementById('paid-dues-submit');
+  this.eventCheckInSubmit = document.getElementById('event-checkin-submit');
+  this.eventCheckInCWID = document.getElementById('event-checkin-cwid');
   this.boardSubmit = document.getElementById('assign-board-submit');
   this.eventSubmit = document.getElementById('create-event-submit');
   this.removeBoardSubmit = document.getElementById('remove-board-submit');
   this.clearDuesSubmit = document.getElementById('clear-dues-submit');
   this.clearPointsSubmit = document.getElementById('clear-points-submit');
+  this.exportEventSubmit = document.getElementById('export-event-submit');
+  this.exportMembersSubmit = document.getElementById('export-members-submit');
 
   // Add listeners for sign in buttons
   this.googleSignInButton.addEventListener('click', this.googleSignIn.bind(this));
@@ -27,11 +31,15 @@ function FirebaseAuth() {
 
   //Add listeners for submit buttons
   this.duesSubmit.addEventListener('click', this.paidDues.bind(this));
+  this.eventCheckInSubmit.addEventListener('click', this.eventCheckIn.bind(this));
+  this.eventCheckInCWID.addEventListener('keydown', function(e){if(e.keyCode === 13){document.getElementById('event-checkin-submit').click()}});
   this.boardSubmit.addEventListener('click', this.assignBoard.bind(this));
   this.eventSubmit.addEventListener('click', this.createEvent.bind(this));
   this.removeBoardSubmit.addEventListener('click', this.removeBoard.bind(this));
   this.clearDuesSubmit.addEventListener('click', this.clearDues.bind(this));
   this.clearPointsSubmit.addEventListener('click', this.clearPoints.bind(this));
+  this.exportMembersSubmit.addEventListener('click', this.exportMembers.bind(this));
+  this.exportEventSubmit.addEventListener('click', this.exportEvent.bind(this));
 
   this.initFirebase();
 }
@@ -139,6 +147,16 @@ FirebaseAuth.prototype.displayData = function() {
       window.location.replace("/");
     }
   });
+  this.database.ref('/events').once('value', (eventSnapshot) => {
+    var content = '';
+    eventSnapshot.forEach((data) => {
+      var val = data.val();
+      var date_name = data.key;
+      content += '<option>' + date_name + '</option>';
+    });
+    $('#event-checkin-event').append(content);
+    $('#event-export-event').append(content);
+  });
 }
 
 FirebaseAuth.prototype.paidDues = function() {
@@ -154,8 +172,9 @@ FirebaseAuth.prototype.paidDues = function() {
     //Update data
     var updates = {};
     updates['/paidDues'] = true;
+    updates['/points'] = 1;
 
-    this.database.ref('/members/' + this.cwid).update(updates, (error) => {
+    this.database.ref('/members/' + cwid).update(updates, (error) => {
       if(error) {
         //Print message to console
         console.log("Paid Dues failed!");
@@ -184,6 +203,79 @@ FirebaseAuth.prototype.paidDues = function() {
   else {
     $('#paid-dues-warning').html("Please enter a valid CWID.");
   }
+};
+
+//Event Check-In Submit Button Functions
+function nextEventPage() {
+  //Check if event was chosen
+  var eventVar = $('#event-checkin-event').val();
+  if(eventVar == null){
+    $('#event-checkin-warning').removeAttr("hidden");
+  }
+  else {
+    //set event in the confirmation screen
+    $('#event-checkin-display').html(eventVar);
+
+    //Show confirmation div
+    $('#event-checkin-edit').attr("hidden", true);
+    $('#event-checkin-confirm').removeAttr("hidden");
+  }
+}
+
+function eventCheckIn() {
+  //Show edit div
+  $('#event-checkin-confirm').attr("hidden", true);
+  $('#event-checkin-edit').removeAttr("hidden");
+}
+
+FirebaseAuth.prototype.eventCheckIn = function() {
+  //Show wait div
+  $('#event-checkin-confirm').attr("hidden", true);
+  $('#event-checkin-wait').removeAttr("hidden");
+
+  //Get CWID, Event ID, and Points
+  //Set Event ID under CWID to true
+  //Add Points To Account Total
+  //Show Success and then Show Form
+  var cwidEntry = $('#event-checkin-cwid').val();
+  var eventTitle = $('#event-checkin-event').val();
+  this.database.ref('/events/' + eventTitle).once('value').then((eventCheckInSnap) => {
+    var eventCheckInData = eventCheckInSnap.val();
+    var eventID = eventCheckInData.eventID;
+    var eventPoints = eventCheckInData.points;
+
+    this.database.ref('/members/' + this.cwid).once('value').then((memberCheckInSnap) => {
+      var memberCheckInData = memberCheckInSnap.val();
+      var currentPoints = memberCheckInData.points;
+      var newPoints = parseInt(currentPoints) + parseInt(eventPoints);
+      //Update data
+      var updates = {};
+      updates['/events/' + eventID] = true;
+      updates['/points'] = newPoints;
+
+      this.database.ref('/members/' + this.cwid).update(updates, (error) => {
+        if(error) {
+          //Print message to console
+          console.log("Event Check In Failed!");
+          console.log("Error: " + error);
+        }
+        else {
+          //Success! Show success div
+          $('#event-checkin-wait').attr("hidden", true);
+          $('#event-checkin-success').removeAttr("hidden");
+
+          //Run displayData to refresh items on page
+          this.displayData();
+
+          setTimeout(function() {
+            $('#event-checkin-success').attr("hidden", true);
+            $('#event-checkin-confirm').removeAttr("hidden");
+            $('#event-checkin-cwid').val("");
+          }, 1000);
+        }
+      });
+    });
+  });
 };
 
 FirebaseAuth.prototype.assignBoard = function() {
@@ -251,7 +343,7 @@ FirebaseAuth.prototype.createEvent = function() {
         $('#create-event-edit').attr("hidden", true);
         $('#create-event-wait').removeAttr("hidden");
 
-        var eventTitle = $('#create-event-date').val().concat('-',$('#create-event-name').val());
+        var eventTitle = date.substring(date.length - 4).concat('-',date.substring(0,5),'-',$('#create-event-name').val());
         var newID = "E" + randomString(8, '0123456789');
         //Update data
         var newEvent = {
@@ -260,29 +352,40 @@ FirebaseAuth.prototype.createEvent = function() {
         };
 
         this.database.ref('/events/' + eventTitle).update(newEvent, (error) => {
-          if(error) {
-            //Print message to console
-            console.log("Event creation failed!");
-            console.log("Error: " + error);
-          }
-          else {
-            //Success! Show success div
-            $('#create-event-wait').attr("hidden", true);
-            $('#create-event-success').removeAttr("hidden");
+          //Update data
+          var updates = {};
+          updates['/events/' + newID] = false;
 
-            //Run displayData to refresh items on page
-            this.displayData();
+          var memberList = this.database.ref('/members');
+          memberList.on('value', (snapshot) => {
+            snapshot.forEach((child) => {
+              child.ref.update(updates, (error) => {
+                if(error) {
+                  //Print message to console
+                  console.log("Event creation failed!");
+                  console.log("Error: " + error);
+                }
+                else {
+                  //Success! Show success div
+                  $('#create-event-wait').attr("hidden", true);
+                  $('#create-event-success').removeAttr("hidden");
 
-            //Show edit div and dismiss modal
-            setTimeout(function() {
-              $('#createEventModal').modal('hide');
-            }, 1000);
+                  //Run displayData to refresh items on page
+                  this.displayData();
 
-            setTimeout(function() {
-              $('#create-event-success').attr("hidden", true);
-              $('#create-event-edit').removeAttr("hidden");
-            }, 1500);
-          }
+                  //Show edit div and dismiss modal
+                  setTimeout(function() {
+                    $('#createEventModal').modal('hide');
+                  }, 1000);
+
+                  setTimeout(function() {
+                    $('#create-event-success').attr("hidden", true);
+                    $('#create-event-edit').removeAttr("hidden");
+                  }, 1500);
+                }
+              });
+            });
+          });
         });
       }
       else {
@@ -422,5 +525,97 @@ FirebaseAuth.prototype.clearPoints = function() {
         }
       });
     });
+  });
+};
+
+//Event Check-In Submit Button Functions
+function nextEventReportPage() {
+  //Check if event was chosen
+  var eventVar = $('#event-export-event').val();
+  if(eventVar == null){
+    $('#export-event-warning').removeAttr("hidden");
+  }
+  else {
+    //set event in the confirmation screen
+    $('#export-event-display').html(eventVar);
+
+    //Show confirmation div
+    $('#export-event-edit').attr("hidden", true);
+    $('#export-event-confirm').removeAttr("hidden");
+  }
+}
+
+function eventExportBack() {
+  //Show edit div
+  $('#export-event-confirm').attr("hidden", true);
+  $('#export-event-edit').removeAttr("hidden");
+}
+
+FirebaseAuth.prototype.exportEvent = function() {
+  //Show wait div
+  $('#export-event-confirm').attr("hidden", true);
+  $('#export-event-wait').removeAttr("hidden");
+
+  var eventTitle = $('#event-export-event').val();
+  this.database.ref('/events/' + eventTitle).once('value').then((eventExportSnap) => {
+    var eventExportData = eventExportSnap.val();
+    var eventID = eventExportData.eventID;
+    var memberList = this.database.ref('/members');
+    memberList.on('value', (snapshot) => {
+      csvData = eventTitle + "\nCWID,First Name,Last Name,Paid Dues?,Attended?,Electrons\n";
+      snapshot.forEach((child) => {
+        memberData = child.val();
+        var cwid = child.key;
+        var fname = memberData.member.fname;
+        var lname = memberData.member.lname;
+        var duesBool = memberData.paidDues;
+        var attended = "false";
+        var electrons = memberData.points;
+        var dues = "false";
+        if(duesBool){
+          dues = "true";
+        }
+        if(memberData.events.eventID){
+          attended = "true";
+        }
+        csvData += cwid + "," + fname + "," + lname + "," + dues + "," + attended + "," + electrons + "\n";
+      });
+      //console.log(file);
+
+      $('#export-event-link').attr("href", "data:text/csv;charset=utf-8," + encodeURI(csvData));
+      //Show success div with download link
+      $('#export-event-wait').attr("hidden", true);
+      $('#export-event-success').removeAttr("hidden");
+    });
+  });
+};
+
+FirebaseAuth.prototype.exportMembers = function() {
+  //Show wait div
+  $('#export-members-edit').attr("hidden", true);
+  $('#export-members-wait').removeAttr("hidden");
+
+  var memberList = this.database.ref('/members');
+  memberList.on('value', (snapshot) => {
+    csvData = "CWID,First Name,Last Name,Paid Dues?,Electrons\n";
+    snapshot.forEach((child) => {
+      memberData = child.val();
+      var cwid = child.key;
+      var fname = memberData.member.fname;
+      var lname = memberData.member.lname;
+      var duesBool = memberData.paidDues;
+      var electrons = memberData.points;
+      var dues = "false";
+      if(duesBool){
+        dues = "true";
+      }
+      csvData += cwid + "," + fname + "," + lname + "," + dues + "," + electrons + "\n";
+    });
+    //console.log(file);
+
+    $('#export-members-link').attr("href", "data:text/csv;charset=utf-8," + encodeURI(csvData));
+    //Show success div with download link
+    $('#export-members-wait').attr("hidden", true);
+    $('#export-members-success').removeAttr("hidden");
   });
 };

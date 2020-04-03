@@ -833,3 +833,36 @@ input[type=submit] {
 .event-meta {
   margin: 10px 0;
 }
+#event-checkin-display {
+  margin-top: 0px;
+  margin-bottom: 20px;
+}
+#eventCheckInModal .modal-dialog {
+  width: 900px;
+}
+#eventCheckInModal .modal-content {
+  min-height: 600px;
+}
+#eventCheckInModal .modal-body {
+  min-height: 490px;
+}
+#board-col {
+  display: flex;
+  flex-flow: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+#board-lower-col {
+  display: flex;
+  flex-flow: row;
+  flex-wrap: wrap;
+  justify-content: left;
+}
+@media only screen and (max-width: 1050px) {
+  #board-lower-col {
+    justify-content: center;
+  }
+}
+#left-col, #center-col, #right-col, #lower-col {
+  width: 250px;
+}
