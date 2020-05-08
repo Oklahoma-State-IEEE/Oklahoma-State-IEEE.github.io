@@ -1,9 +1,9 @@
 FirebaseAuth.prototype.setupAccount = function(user) {
   //Get user's name
-  var fullName = user.displayName;
+  var fullName = "First Last";
 
-  if(fullName = null){
-    fullName = "None";
+  if(user.displayName != null){
+    fullName = user.displayName;
   }
 
   //Set the user's name on page

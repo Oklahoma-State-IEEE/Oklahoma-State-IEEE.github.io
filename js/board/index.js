@@ -23,6 +23,7 @@ function FirebaseAuth() {
   this.clearPointsSubmit = document.getElementById('clear-points-submit');
   this.exportEventSubmit = document.getElementById('export-event-submit');
   this.exportMembersSubmit = document.getElementById('export-members-submit');
+  this.clearEventSubmit = document.getElementById('clear-event-submit');
 
   // Add listeners for sign in buttons
   this.googleSignInButton.addEventListener('click', this.googleSignIn.bind(this));
@@ -40,6 +41,7 @@ function FirebaseAuth() {
   this.clearPointsSubmit.addEventListener('click', this.clearPoints.bind(this));
   this.exportMembersSubmit.addEventListener('click', this.exportMembers.bind(this));
   this.exportEventSubmit.addEventListener('click', this.exportEvent.bind(this));
+  this.clearEventSubmit.addEventListener('click', this.clearEvent.bind(this));
 
   this.initFirebase();
 }
@@ -156,8 +158,10 @@ FirebaseAuth.prototype.displayData = function() {
     });
     $('#event-checkin-event').empty();
     $('#event-export-event').empty();
+    $('#event-clear-event').empty();
     $('#event-checkin-event').append(content);
     $('#event-export-event').append(content);
+    $('#event-clear-event').append(content);
   });
 }
 
@@ -503,37 +507,64 @@ FirebaseAuth.prototype.clearPoints = function() {
   $('#clear-points-edit').attr("hidden", true);
   $('#clear-points-wait').removeAttr("hidden");
 
+  var today = new Date();
+  var dd = String(today.getDate()).padStart(2, '0');
+  var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+  var yyyy = today.getFullYear();
+
+  //Check if date is in valid format
+  var date = mm + '-' + dd + '-' + yyyy;
+
+  console.log(date);
+
+  //Check if name isn't too long
+  var name = 'Cleared Points';
+
+  //Check if points is a valid number
+  var points = 0;
+
+  var eventTitle = date.substring(date.length - 4).concat('-',date.substring(0,5),'-','Cleared Points');
+  var newID = "E" + randomString(8, '0123456789');
   //Update data
-  var updates = {};
-  updates['/points'] = 0;
+  var newEvent = {
+    points: 0,
+    eventID: newID
+  };
 
-  var memberList = this.database.ref('/members');
-  memberList.on('value', (snapshot) => {
-    snapshot.forEach((child) => {
-      child.ref.update(updates, (error) => {
-        if(error) {
-          //Print message to console
-          console.log("Clear Points failed!");
-          console.log("Error: " + error);
-        }
-        else {
-          //Success! Show success div
-          $('#clear-points-wait').attr("hidden", true);
-          $('#clear-points-success').removeAttr("hidden");
+  this.database.ref('/events/' + eventTitle).update(newEvent, (error) => {
+    //Update data
+    var updates = {};
+    updates['/events/' + newID] = true;
+    updates['/points'] = 0;
 
-          //Run displayData to refresh items on page
-          this.displayData();
+    var memberList = this.database.ref('/members');
+    memberList.on('value', (snapshot) => {
+      snapshot.forEach((child) => {
+        child.ref.update(updates, (error) => {
+          if(error) {
+            //Print message to console
+            console.log("Clear Points failed!");
+            console.log("Error: " + error);
+          }
+          else {
+            //Success! Show success div
+            $('#clear-points-wait').attr("hidden", true);
+            $('#clear-points-success').removeAttr("hidden");
 
-          //Show edit div and dismiss modal
-          setTimeout(function() {
-            $('#clearPointsModal').modal('hide');
-          }, 1000);
+            //Run displayData to refresh items on page
+            this.displayData();
 
-          setTimeout(function() {
-            $('#clear-points-success').attr("hidden", true);
-            $('#clear-points-edit').removeAttr("hidden");
-          }, 1500);
-        }
+            //Show edit div and dismiss modal
+            setTimeout(function() {
+              $('#clearPointsModal').modal('hide');
+            }, 1000);
+
+            setTimeout(function() {
+              $('#clear-points-success').attr("hidden", true);
+              $('#clear-points-edit').removeAttr("hidden");
+            }, 1500);
+          }
+        });
       });
     });
   });
@@ -629,5 +660,88 @@ FirebaseAuth.prototype.exportMembers = function() {
     //Show success div with download link
     $('#export-members-wait').attr("hidden", true);
     $('#export-members-success').removeAttr("hidden");
+  });
+};
+
+//Event Check-In Submit Button Functions
+function nextEventClearPage() {
+  //Check if event was chosen
+  var eventVar = $('#event-clear-event').val();
+  if(eventVar == null){
+    $('#clear-event-warning').removeAttr("hidden");
+  }
+  else {
+    //set event in the confirmation screen
+    $('#clear-event-display').html(eventVar);
+
+    //Show confirmation div
+    $('#clear-event-edit').attr("hidden", true);
+    $('#clear-event-confirm').removeAttr("hidden");
+  }
+}
+
+function eventClearBack() {
+  //Show edit div
+  $('#clear-event-confirm').attr("hidden", true);
+  $('#clear-event-edit').removeAttr("hidden");
+}
+
+FirebaseAuth.prototype.clearEvent = function() {
+  //Show wait div
+  $('#clear-event-confirm').attr("hidden", true);
+  $('#clear-event-wait').removeAttr("hidden");
+
+  //Update data
+  var clearEventUpdates = {};
+  var pointsAfter;
+  var eventTitle = $('#event-clear-event').val();
+  this.database.ref('/events/' + eventTitle).once('value').then((eventClearSnap) => {
+    var eventClearData = eventClearSnap.val();
+    var eventID = eventClearData.eventID;
+    var eventPoints = eventClearData.points;
+    var memberList = this.database.ref('/members');
+    memberList.on('value', (clearEventSnap) => {
+      clearEventSnap.forEach((clearEventChild) => {
+        var memberData = clearEventChild.val();
+        pointsAfter = 0;
+        //console.log(memberData);
+        //console.log(eventPoints);
+        //console.log(memberData.points);
+        if(memberData.events[eventID]){
+          pointsAfter = memberData.points - eventPoints;
+        }
+        else{
+          pointsAfter = memberData.points;
+        }
+        clearEventUpdates['/events/' + eventID] = false;
+        clearEventUpdates['/points'] = pointsAfter;
+
+        clearEventChild.ref.update(clearEventUpdates, (error) => {
+          if(error) {
+            //Print message to console
+            console.log("Clear Attendance failed!");
+            console.log("Error: " + error);
+          }
+          else {
+            //Success! Show success div
+            $('#clear-event-wait').attr("hidden", true);
+            $('#clear-event-success').removeAttr("hidden");
+
+            //Run displayData to refresh items on page
+            this.displayData();
+
+            //Show edit div and dismiss modal
+            setTimeout(function() {
+              $('#clearEventModal').modal('hide');
+            }, 1000);
+
+            setTimeout(function() {
+              $('#clear-event-success').attr("hidden", true);
+              $('#clear-event-edit').removeAttr("hidden");
+            }, 1500);
+          }
+        });
+      });
+    });
   });
 };

@@ -43,7 +43,7 @@ js: /js/board/index.js
       <h4>Clear Points</h4>
       <button class="btn-primary" onclick="$('#clearPointsModal').modal('show');">Clear</button>
       <h4>Clear Event Attendance</h4>
-      <button class="btn-primary" onclick="$('#clearEventModal').modal('show');">Create</button>
+      <button class="btn-primary" onclick="$('#clearEventModal').modal('show');">Clear</button>
     </div>
   </div>
 </div>
@@ -375,6 +375,53 @@ js: /js/board/index.js
             <div hidden class="modal-body center" id="export-members-success">
                 <h1>Success!</h1>
                 <a href="" download="membersList.csv" target="blank" id="export-members-link">Download Members</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="clearEventModal" tabindex="-1" role="dialog" aria-labelledby="clearEventModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Clear Event Attendance</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div id="clear-event-edit">
+                <div class="modal-body center">
+                    <p>Select the event below.</p>
+                    <p hidden class="text-danger center" id="clear-event-warning">Please choose an event.</p>
+                    <div class="form-group">
+                        <select class="form-control" id="event-clear-event" name="Event">
+                          <option value="">Select Event</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <btn class="form-btn btn-lg btn-primary" onclick="nextEventClearPage()">Next</btn>
+                </div>
+            </div>
+
+            <div hidden id="clear-event-confirm">
+              <div class="modal-body">
+                <p class="center">Clear Attendance For This Event:</p>
+                <h3 class="center" id="clear-event-display"></h3>
+                    <p class="text-danger center">This will clear the attendance for this event.</p>
+              </div>
+              <div class="modal-footer">
+                <btn class="form-btn btn-lg btn-primary" onclick="eventClearBack()">Back</btn>
+                <btn class="form-btn btn-lg btn-primary" id="clear-event-submit">Clear</btn>
+              </div>
+            </div>
+
+            <div hidden class="modal-body center" id="clear-event-wait">
+                <img src="/img/loading.gif" width="200" height="200" class="img-fluid" alt="Please Wait...">
+                <h4>Clearing...</h4>
+            </div>
+            <div hidden class="modal-body center" id="clear-event-success">
+                <h1>Success!</h1>
             </div>
         </div>
     </div>
