@@ -194,7 +194,7 @@ FirebaseAuth.prototype.displayData = function() {
     }
     else {
       $('#account-cwid').html("***" + this.cwid.substr(3,8));
-      $('#account-cwid-edit').attr("style", "display: none;");
+      $('#account-cwid-edit').html("<a href=\"javascript:void(0);\" onclick=\"$('#editCWIDModal').modal('show');\">Edit</a>");
     }
 
     //Event stuff

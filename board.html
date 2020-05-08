@@ -42,6 +42,8 @@ js: /js/board/index.js
       <button class="btn-primary" onclick="$('#clearDuesModal').modal('show');">Clear</button>
       <h4>Clear Points</h4>
       <button class="btn-primary" onclick="$('#clearPointsModal').modal('show');">Clear</button>
+      <h4>Clear Event Attendance</h4>
+      <button class="btn-primary" onclick="$('#clearEventModal').modal('show');">Create</button>
     </div>
   </div>
 </div>
@@ -150,6 +152,7 @@ js: /js/board/index.js
               <div class="modal-body">
                 <p class="center">Check-In To This Event:</p>
                 <h3 class="center" id="event-checkin-display"></h3>
+                <p hidden class="text-danger center" id="event-checkin-cwid-warning">CWID Invalid! Please try again.</p>
                 <label for="event-checkin-cwid">CWID</label>
                 <input type="text" id="event-checkin-cwid" class="form-control" placeholder="CWID" required>
               </div>

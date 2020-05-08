@@ -154,6 +154,8 @@ FirebaseAuth.prototype.displayData = function() {
       var date_name = data.key;
       content += '<option>' + date_name + '</option>';
     });
+    $('#event-checkin-event').empty();
+    $('#event-export-event').empty();
     $('#event-checkin-event').append(content);
     $('#event-export-event').append(content);
   });
@@ -244,36 +246,45 @@ FirebaseAuth.prototype.eventCheckIn = function() {
     var eventID = eventCheckInData.eventID;
     var eventPoints = eventCheckInData.points;
 
-    this.database.ref('/members/' + this.cwid).once('value').then((memberCheckInSnap) => {
-      var memberCheckInData = memberCheckInSnap.val();
-      var currentPoints = memberCheckInData.points;
-      var newPoints = parseInt(currentPoints) + parseInt(eventPoints);
-      //Update data
-      var updates = {};
-      updates['/events/' + eventID] = true;
-      updates['/points'] = newPoints;
+    this.database.ref('/members/' + cwidEntry).once('value').then((memberCheckInSnap) => {
+      if(memberCheckInSnap.val() == null) {
+        // Show Warning that CWID was invalid
+        $('#event-checkin-cwid-warning').removeAttr("hidden");
+        $('#event-checkin-wait').attr("hidden", true);
+        $('#event-checkin-confirm').removeAttr("hidden");
+        $('#event-checkin-cwid').val("");
+      }
+      else {
+        var memberCheckInData = memberCheckInSnap.val();
+        var currentPoints = memberCheckInData.points;
+        var newPoints = parseInt(currentPoints) + parseInt(eventPoints);
+        //Update data
+        var updates = {};
+        updates['/events/' + eventID] = true;
+        updates['/points'] = newPoints;
 
-      this.database.ref('/members/' + this.cwid).update(updates, (error) => {
-        if(error) {
-          //Print message to console
-          console.log("Event Check In Failed!");
-          console.log("Error: " + error);
-        }
-        else {
-          //Success! Show success div
-          $('#event-checkin-wait').attr("hidden", true);
-          $('#event-checkin-success').removeAttr("hidden");
+        this.database.ref('/members/' + cwidEntry).update(updates, (error) => {
+          if(error) {
+            //Print message to console
+            console.log("Event Check In Failed!");
+            console.log("Error: " + error);
+          }
+          else {
+            //Success! Show success div
+            $('#event-checkin-wait').attr("hidden", true);
+            $('#event-checkin-success').removeAttr("hidden");
 
-          //Run displayData to refresh items on page
-          this.displayData();
+            //Run displayData to refresh items on page
+            this.displayData();
 
-          setTimeout(function() {
-            $('#event-checkin-success').attr("hidden", true);
-            $('#event-checkin-confirm').removeAttr("hidden");
-            $('#event-checkin-cwid').val("");
-          }, 1000);
-        }
-      });
+            setTimeout(function() {
+              $('#event-checkin-success').attr("hidden", true);
+              $('#event-checkin-confirm').removeAttr("hidden");
+              $('#event-checkin-cwid').val("");
+            }, 1000);
+          }
+        });
+      }
     });
   });
 };
@@ -575,7 +586,8 @@ FirebaseAuth.prototype.exportEvent = function() {
         if(duesBool){
           dues = "true";
         }
-        if(memberData.events.eventID){
+        console.log(memberData.events[eventID]);
+        if(memberData.events[eventID]){
           attended = "true";
         }
         csvData += cwid + "," + fname + "," + lname + "," + dues + "," + attended + "," + electrons + "\n";

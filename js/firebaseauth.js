@@ -49,14 +49,20 @@ FirebaseAuth.prototype.initFirebase = function() {
 
 FirebaseAuth.prototype.googleSignIn = function() {
   var provider = new firebase.auth.GoogleAuthProvider();
-  this.auth.signInWithPopup(provider);
+  this.auth.signInWithPopup(provider).catch(function(error) {
+    $('#same-email-warning').removeAttr("hidden");
+    console.log("made it");
+  });
 };
 
 FirebaseAuth.prototype.githubSignIn = function() {
   var provider = new firebase.auth.GithubAuthProvider();
   provider.addScope('read:org');
   provider.addScope('user');
-  this.auth.signInWithPopup(provider);
+  this.auth.signInWithPopup(provider).catch(function(error) {
+    $('#same-email-warning').removeAttr("hidden");
+    console.log("made it");
+  });
   //other stuff
 };
 
