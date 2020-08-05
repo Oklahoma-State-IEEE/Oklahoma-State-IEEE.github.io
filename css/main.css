@@ -862,7 +862,15 @@ input[type=submit] {
   #board-lower-col {
     justify-content: center;
   }
+
+  h1 {
+    font-size: 30px;
+  }
 }
 #left-col, #center-col, #right-col, #lower-col {
   width: 250px;
+}
+
+footer .row {
+  justify-content: center;
 }
