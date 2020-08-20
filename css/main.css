@@ -366,13 +366,10 @@ footer .theme-by {
   height: 192px;
   width: 192px;
   margin-top: -35px;
-  filter: grayscale(90%);
 }
 .post-image:hover {
-  filter: grayscale(0%);
 }
 .post-image img {
-  border-radius: 100px;
   height: 192px;
   width: 192px;
 }
@@ -873,4 +870,17 @@ input[type=submit] {
 
 footer .row {
   justify-content: center;
+}
+
+.fc-center {
+  margin: 10px;
+}
+
+.fc-toolbar {
+  flex-wrap:wrap;
+  justify-content: space-evenly !important;
+}
+
+.fc table {
+  font-size: .9em !important;
 }

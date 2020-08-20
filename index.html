@@ -8,48 +8,59 @@ js: /js/home.js
   <h1>Welcome to OSU IEEE!</h1>
   <p>IEEE is the world’s largest professional organization devoted to advancements in technological fields such as electrical engineering, computer engineering, and computer science. With over 365,000 members and 1,570 global chapters, members can effectively network in their areas of interest and future profession.</p>
   <div class="posts-list">
-    {% for event in site.events limit:1 %}
-  		{% assign current_date = 'now' | date: '%s' %}
-  		{% assign event_formatted_date = event.event_date | date: '%s' %}
-  		{% if event_formatted_date > current_date %}
-        <h2>Our Next Event</h2>
-  		  <article class="post-preview">
-  		    <a href="{{ event.url | relative_url }}">
-  			  <h3 class="post-title">{{ event.title }}</h3>
+    {% assign posted = false %}
+    {% for event in site.events %}
+      {% assign current_date = 'now' | date: '%s' %}
+      {% assign event_formatted_date = event.event_starttime | date: '%s' %}
+      {% if event_formatted_date > current_date %}
+        {% if posted != true %}
+          {% assign posted = true %}
+          <h2>Our Next Event</h2>
+          <article class="post-preview">
+    		    <a href="{{ event.url | relative_url }}">
+    			  <h2 class="post-title">{{ event.title }}</h2>
 
-  			  {% if post.subtitle %}
-  			  <h4 class="post-subtitle">
-  			    {{ post.subtitle }}
-  			  </h4>
-  			  {% endif %}
-  		    </a>
+    			  {% if post.subtitle %}
+    			  <h3 class="post-subtitle">
+    			    {{ post.subtitle }}
+    			  </h3>
+    			  {% endif %}
+    		    </a>
 
-  		    <div class="post-entry-container">
-  		      {% if event.image %}
-  		      <div class="post-image">
-  		        <a href="{{ event.url | relative_url }}">
-  		          <img src="{{ event.image | relative_url }}">
-  		        </a>
-  		      </div>
-  		      {% endif %}
-  		      <div class="post-entry">
-  		        {{ event.excerpt | strip_html | xml_escape | truncatewords: site.excerpt_length }}
-  		        {% assign excerpt_word_count = event.excerpt | number_of_words %}
-  		        {% if event.content != event.excerpt or excerpt_word_count > site.excerpt_length %}
-  		          <a href="{{ event.url | relative_url }}" class="post-read-more">[Read&nbsp;More]</a>
-  		        {% endif %}
-  		      </div>
-  		    </div>
+    		    <div class="post-entry-container">
+    		      {% if event.thumbnail-image %}
+    		      <div class="post-image">
+    		        <a href="{{ event.url | relative_url }}">
+    		          <img src="{{ event.thumbnail-image | relative_url }}">
+    		        </a>
+    		      </div>
+    		      {% endif %}
+    		      <div class="post-entry event-hr">
+    						{% if event.normal_date_time %}
+    			        <p class="event-meta">{{ event.normal_date_time }}</p>
+    			      {% endif %}
+    						{% if event.location %}
+    			        <p class="event-meta">{{ event.location }}</p>
+    			      {% endif %}
+    						{% if event.address %}
+    			        <p class="event-meta">{{ event.address }}</p>
+    			      {% endif %}
+    						<hr>
+    		        {{ event.short-description }}
+                <a href="{{ event.url | relative_url }}" class="post-read-more">See Details-></a>
+    		      </div>
+    		    </div>
 
-  		   </article>
-  		{% endif %}
+    		   </article>
+        {% endif %}
+      {% endif %}
     {% endfor %}
   </div>
 
-  <h2>Sponsors</h2>
-  <p>Our mission is to enable students to learn about emerging issues in the technology industry through technical workshops, competitions, and mentorship. As part of this mission, we provide our members with a lounge to study in as well as networking opportunities with various companies.
+  <h2>Company Connections</h2>
+  <p>Our mission is to enable students to learn about various aspects of both general engineering and electrical engineering. Due to the current virtual climate due to COVID-19, we are aiming to allow companies to directly connect with our members and the student body here at Oklahoma State University. We are doing that through our <a href="/company-connection">Company Connection page</a>. Here companies can post an overview video that students can comment questions on. The company can then respond to questions and view student profiles.
     <br/><br/>
-    Interested in working with us? Check out our <a href="/sponsors">sponsorship page</a> or <a href="mailto:ieee@okstate.edu">email us</a> to learn more!
+    Interested in working with us? Check out our <a href="/company-connection">Company Connection page</a> or <a href="mailto:ieee@okstate.edu">email us</a> to learn more!
   </p>
 </div>
   <div class="modal fade" id="newAccountModal" tabindex="-1" role="dialog" aria-labelledby="newAccountModal" aria-hidden="true">

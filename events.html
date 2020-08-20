@@ -41,6 +41,7 @@ integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="  crossorigin="an
 		{% assign current_date = 'now' | date: '%s' %}
 		{% assign event_formatted_date = event.event_starttime | date: '%s' %}
 		{% if event_formatted_date > current_date %}
+
 		  <article class="post-preview">
 		    <a href="{{ event.url | relative_url }}">
 			  <h2 class="post-title">{{ event.title }}</h2>
@@ -53,14 +54,14 @@ integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="  crossorigin="an
 		    </a>
 
 		    <div class="post-entry-container">
-		      {% if event.image %}
+		      {% if event.thumbnail-image %}
 		      <div class="post-image">
 		        <a href="{{ event.url | relative_url }}">
-		          <img src="{{ event.image | relative_url }}">
+		          <img src="{{ event.thumbnail-image | relative_url }}">
 		        </a>
 		      </div>
 		      {% endif %}
-		      <div class="post-entry">
+		      <div class="post-entry event-hr">
 						{% if event.normal_date_time %}
 			        <p class="event-meta">{{ event.normal_date_time }}</p>
 			      {% endif %}
