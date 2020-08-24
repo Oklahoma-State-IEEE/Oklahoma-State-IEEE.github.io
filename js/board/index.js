@@ -165,6 +165,7 @@ FirebaseAuth.prototype.displayData = function() {
   });
 }
 
+//FOR NATIONAL DUES
 FirebaseAuth.prototype.paidDues = function() {
   //Check if CWID Number is a valid number
   var cwid = $('#paid-dues-cwid').val();
@@ -175,34 +176,45 @@ FirebaseAuth.prototype.paidDues = function() {
     $('#paid-dues-edit').attr("hidden", true);
     $('#paid-dues-wait').removeAttr("hidden");
 
-    //Update data
-    var updates = {};
-    updates['/paidDues'] = true;
-    updates['/points'] = 1;
-
-    this.database.ref('/members/' + cwid).update(updates, (error) => {
-      if(error) {
-        //Print message to console
-        console.log("Paid Dues failed!");
-        console.log("Error: " + error);
+    this.database.ref('/members/' + cwid).once('value').then((paidDuesSnap) => {
+      if(paidDuesSnap.val() == null) {
+        // Show Warning that CWID was invalid
+        $('#paid-dues-warning').html("Please enter a valid CWID.");
       }
       else {
-        //Success! Show success div
-        $('#paid-dues-wait').attr("hidden", true);
-        $('#paid-dues-success').removeAttr("hidden");
+        var paidDuesData = paidDuesSnap.val();
+        var currentPoints = paidDuesData.points;
+        var newPoints = parseInt(currentPoints) + 5;
+        //Update data
+        var updates = {};
+        updates['/paidDues'] = true;
+        updates['/points'] = newPoints;
 
-        //Run displayData to refresh items on page
-        this.displayData();
+        this.database.ref('/members/' + cwid).update(updates, (error) => {
+          if(error) {
+            //Print message to console
+            console.log("Paid Dues failed!");
+            console.log("Error: " + error);
+          }
+          else {
+            //Success! Show success div
+            $('#paid-dues-wait').attr("hidden", true);
+            $('#paid-dues-success').removeAttr("hidden");
 
-        //Show edit div and dismiss modal
-        setTimeout(function() {
-          $('#paidDuesModal').modal('hide');
-        }, 1000);
+            //Run displayData to refresh items on page
+            this.displayData();
 
-        setTimeout(function() {
-          $('#paid-dues-success').attr("hidden", true);
-          $('#paid-dues-edit').removeAttr("hidden");
-        }, 1500);
+            //Show edit div and dismiss modal
+            setTimeout(function() {
+              $('#paidDuesModal').modal('hide');
+            }, 1000);
+
+            setTimeout(function() {
+              $('#paid-dues-success').attr("hidden", true);
+              $('#paid-dues-edit').removeAttr("hidden");
+            }, 1500);
+          }
+        });
       }
     });
   }

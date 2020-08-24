@@ -127,7 +127,7 @@ FirebaseAuth.prototype.displayData = function() {
     var userElement = snapshot.val();
 
     //Show Dues Warning and Hide Resume Book/Event Data
-    if (!userElement.paidDues) {
+    if (!userElement.activated) {
       $('#dues-warning').removeAttr("hidden");
     }
     else {
@@ -201,7 +201,7 @@ FirebaseAuth.prototype.displayData = function() {
     eventRef.once('value', (eventSnapshot) => {
       var content = '';
       if(userElement.paidDues) {
-        content = '<tr><td class="center">N/A</td><td class="center">Membership Dues</td><td class="center">1</td><td class="center"><i class="fas fa-check" aria-hidden="true"></td></tr>';
+        content = '<tr><td class="center">N/A</td><td class="center">National Membership Dues</td><td class="center">5</td><td class="center"><i class="fas fa-check" aria-hidden="true"></td></tr>';
       }
       eventSnapshot.forEach((data) => {
         var val = data.val();
@@ -444,10 +444,13 @@ FirebaseAuth.prototype.editResume = function() {
         //Get the URL of the uploaded file
         var url = snapshot.metadata.fullPath;
         // console.log("URL: " + url);
+        var currentDate = new Date();
+        var dateUpdated = currentDate.toDateString();
 
         //Record this URL in the database
         var updates = {};
         updates['/resume'] = url;
+        updates['/dateResumeUpdated'] = dateUpdated;
 
         this.database.ref('/members/' + this.cwid + '/member').update(updates, (error) => {
           if(error) {

@@ -49,7 +49,7 @@ FirebaseAuth.prototype.createAccount = function() {
         var newMember = {
           activated: true,
           boardMember: false,
-          paidDues: false,
+          paidNationalDues: false,
           points: 0,
           member: {
             fname: $('#newaccount-fname').val(),
