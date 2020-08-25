@@ -835,7 +835,7 @@ input[type=submit] {
   margin-top: 0px;
   margin-bottom: 20px;
 }
-#eventCheckInModal .modal-dialog {
+/*#eventCheckInModal .modal-dialog {
   width: 900px;
 }
 #eventCheckInModal .modal-content {
@@ -843,7 +843,7 @@ input[type=submit] {
 }
 #eventCheckInModal .modal-body {
   min-height: 490px;
-}
+}*/
 #board-col {
   display: flex;
   flex-flow: row;
