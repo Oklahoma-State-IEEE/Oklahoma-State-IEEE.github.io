@@ -885,3 +885,42 @@ footer .row {
 .fc table {
   font-size: .9em !important;
 }
+
+.board-row, .board-row2 {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: left;
+  margin-bottom: 25px;
+}
+
+.board-row div, .board-row2 div{
+  width: 200px;
+  text-align: center;
+}
+
+.board-row .far, .board-row .fas {
+  font-size: 48px;
+}
+
+.board-row button, .board-row2 button {
+  padding: 15px;
+  width: 90%;
+  height: 90%;
+}
+
+.board-row .fa-stack {
+  font-size: 48px;
+}
+
+.board-row i, .board-row2 i {
+  vertical-align: middle;
+}
+
+.checkin-button .fas{
+  font-size: 48px;
+}
+
+.checkin-button {
+  text-align: center;
+}

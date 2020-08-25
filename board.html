@@ -7,43 +7,73 @@ js: /js/board/index.js
 <div hidden id="board-page">
   <h1>Board Actions</h1>
   <p>View and manage various site settings here. Please follow the documentation provided in the shared drive!</p>
-  <div id="board-col">
-    <div id="left-col">
-      <h2>Events</h2>
-      <h4>Event Check-In</h4>
-      <button class="btn-primary" onclick="$('#eventCheckInModal').modal('show');">Check-In</button>
-      <h4>Create Event</h4>
-      <button class="btn-primary" onclick="$('#createEventModal').modal('show');">Create</button>
+  <h2>Events</h2>
+  <div class="board-row">
+    <div>
+      <button class="btn-primary" onclick="$('#eventCheckInModal').modal('show');"><i class="fas fa-calendar-check"></i><br/><h4>Event Check-In</h4></button>
     </div>
-    <div id="center-col">
-      <h2>Management</h2>
-      <h4>Paid National Dues</h4>
-      <button class="btn-primary" onclick="$('#paidDuesModal').modal('show');">Paid</button>
-      <h4>Assign Board Access</h4>
-      <button class="btn-primary" onclick="$('#assignBoardModal').modal('show');">Assign</button>
-    </div>
-    <div id="right-col">
-      <h2>Reports</h2>
-      <h4>Pull Resume Book</h4>
-      <button class="btn-primary" onclick="">Pull</button>
-      <h4>Export Event Attendance</h4>
-      <button class="btn-primary" onclick="$('#exportEventModal').modal('show');">Export</button>
-      <h4>Export Members</h4>
-      <button class="btn-primary" onclick="$('#exportMembersModal').modal('show');">Export</button>
+    <div>
+      <button class="btn-primary" onclick="$('#createEventModal').modal('show');"><i class="far fa-calendar-plus"></i><br/><h4>Create Event</h4></button>
     </div>
   </div>
-    <hr>
-  <div id="board-lower-col">
-    <div id="lower-col">
-      <h2>Danger Zone</h2>
-      <h4>Remove Board Access</h4>
-      <button class="btn-primary" onclick="$('#removeBoardModal').modal('show');">Remove</button>
-      <h4>Clear Dues Paid</h4>
-      <button class="btn-primary" onclick="$('#clearDuesModal').modal('show');">Clear</button>
-      <h4>Clear Points</h4>
-      <button class="btn-primary" onclick="$('#clearPointsModal').modal('show');">Clear</button>
-      <h4>Clear Event Attendance</h4>
-      <button class="btn-primary" onclick="$('#clearEventModal').modal('show');">Clear</button>
+  <h2>Management</h2>
+  <div class="board-row">
+    <div>
+      <button class="btn-primary" onclick="$('#paidDuesModal').modal('show');"><i class="far fa-money-bill-alt"></i><h4>Paid National Dues</h4></button>
+    </div>
+    <div>
+      <button class="btn-primary" onclick="$('#assignBoardModal').modal('show');"><i class="fas fa-user-tie"></i><h4>Assign Board Access</h4></button>
+    </div>
+  </div>
+  <h2>Reports</h2>
+  <div class="board-row">
+    <div>
+      <button class="btn-primary" onclick=""><i class="far fa-file"></i><h4>Pull Resume Book</h4></button>
+    </div>
+    <div>
+      <button class="btn-primary" onclick="$('#exportEventModal').modal('show');"><i class="fas fa-user-clock"></i><h4>Export Event Attendance</h4></button>
+    </div>
+    <div>
+      <button class="btn-primary" onclick="$('#exportMembersModal').modal('show');"><i class="fas fa-users"></i><h4>Export Members</h4></button>
+    </div>
+  </div>
+  <h2>Danger Zone</h2>
+  <div class="board-row2">
+    <div>
+      <button class="btn-primary" onclick="$('#removeBoardModal').modal('show');">
+        <span class="fa-stack fa-2x">
+          <i class="fas fa-user-tie fa-stack-1x"></i>
+            <i class="fas fa-ban fa-stack-2x" style="color:Tomato"></i>
+        </span>
+        <h4>Remove Board Access</h4>
+      </button>
+    </div>
+    <div>
+      <button class="btn-primary" onclick="$('#clearDuesModal').modal('show');">
+        <span class="fa-stack fa-2x">
+          <i class="far fa-money-bill-alt fa-stack-1x"></i>
+            <i class="fas fa-ban fa-stack-2x" style="color:Tomato"></i>
+        </span>
+        <h4>Clear National Dues Paid</h4>
+      </button>
+    </div>
+    <div>
+      <button class="btn-primary" onclick="$('#clearPointsModal').modal('show');">
+        <span class="fa-stack fa-2x">
+          <i class="fas fa-atom fa-stack-1x"></i>
+            <i class="fas fa-ban fa-stack-2x" style="color:Tomato"></i>
+        </span>
+        <h4>Clear Points</h4>
+      </button>
+    </div>
+    <div>
+      <button class="btn-primary" onclick="$('#clearEventModal').modal('show');">
+        <span class="fa-stack fa-2x">
+          <i class="fas fa-user-clock fa-stack-1x"></i>
+            <i class="fas fa-ban fa-stack-2x" style="color:Tomato"></i>
+        </span>
+        <h4>Clear Event Attendance</h4>
+      </button>
     </div>
   </div>
 </div>
@@ -85,6 +115,8 @@ js: /js/board/index.js
             </div>
             <div hidden class="modal-body center" id="create-event-success">
                 <h1>Success!</h1>
+                <p>This is the Event Check In Number:</p>
+                <h3 id="event-id-display"></h3>
             </div>
         </div>
     </div>
@@ -123,7 +155,7 @@ js: /js/board/index.js
         </div>
     </div>
 </div>
-<div class="modal fade" id="eventCheckInModal" tabindex="-1" role="dialog" aria-labelledby="eventCheckInModal" aria-hidden="true">
+<!--<div class="modal fade" id="eventCheckInModal" tabindex="-1" role="dialog" aria-labelledby="eventCheckInModal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -168,6 +200,41 @@ js: /js/board/index.js
             </div>
             <div hidden class="modal-body center" id="event-checkin-success">
                 <h1>Success!</h1>
+            </div>
+        </div>
+    </div>
+</div>-->
+<div class="modal fade" id="eventCheckInModal" tabindex="-1" role="dialog" aria-labelledby="eventCheckInModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Event Check-In ID</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div id="event-checkin-edit">
+                <div class="modal-body center">
+                    <p>Select the event below.</p>
+                    <p hidden class="text-danger center" id="event-checkin-warning">Please choose an event.</p>
+                    <div class="form-group">
+                        <select class="form-control" id="event-checkin-event" name="Event">
+                          <option value="">Select Event</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                  <btn class="form-btn btn-lg btn-primary" id="event-checkin-submit">Submit</btn>
+                </div>
+            </div>
+
+            <div hidden id="event-checkin-confirm">
+              <div class="modal-body">
+                <p class="center">Here is the Event ID:</p>
+                <h3 class="center" id="event-checkin-display-title"></h3>
+                <h3 class="center" id="event-checkin-display"></h3>
+              </div>
             </div>
         </div>
     </div>
@@ -244,7 +311,7 @@ js: /js/board/index.js
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Clear Dues</h5>
+                <h5 class="modal-title">Clear National Dues</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -252,7 +319,7 @@ js: /js/board/index.js
 
             <div id="clear-dues-edit">
                 <div class="modal-body">
-                    <p class="center"><span class="text-danger">This will remove the dues status for all members!<br/>Please export the membership list before running!</span></p>
+                    <p class="center"><span class="text-danger">This will remove the national dues status for all members!<br/>Please export the membership list before running!</span></p>
                     <p class="text-danger center" id="clear-dues-warning"></p>
                 </div>
                 <div class="modal-footer">

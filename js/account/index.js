@@ -200,7 +200,7 @@ FirebaseAuth.prototype.displayData = function() {
     //Event stuff
     eventRef.once('value', (eventSnapshot) => {
       var content = '';
-      if(userElement.paidDues) {
+      if(userElement.paidNationalDues) {
         content = '<tr><td class="center">N/A</td><td class="center">National Membership Dues</td><td class="center">5</td><td class="center"><i class="fas fa-check" aria-hidden="true"></td></tr>';
       }
       eventSnapshot.forEach((data) => {

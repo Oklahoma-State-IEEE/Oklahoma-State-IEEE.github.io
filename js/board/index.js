@@ -33,7 +33,7 @@ function FirebaseAuth() {
   //Add listeners for submit buttons
   this.duesSubmit.addEventListener('click', this.paidDues.bind(this));
   this.eventCheckInSubmit.addEventListener('click', this.eventCheckIn.bind(this));
-  this.eventCheckInCWID.addEventListener('keydown', function(e){if(e.keyCode === 13){document.getElementById('event-checkin-submit').click()}});
+  //this.eventCheckInCWID.addEventListener('keydown', function(e){if(e.keyCode === 13){document.getElementById('event-checkin-submit').click()}});
   this.boardSubmit.addEventListener('click', this.assignBoard.bind(this));
   this.eventSubmit.addEventListener('click', this.createEvent.bind(this));
   this.removeBoardSubmit.addEventListener('click', this.removeBoard.bind(this));
@@ -187,13 +187,13 @@ FirebaseAuth.prototype.paidDues = function() {
         var newPoints = parseInt(currentPoints) + 5;
         //Update data
         var updates = {};
-        updates['/paidDues'] = true;
+        updates['/paidNationalDues'] = true;
         updates['/points'] = newPoints;
 
         this.database.ref('/members/' + cwid).update(updates, (error) => {
           if(error) {
             //Print message to console
-            console.log("Paid Dues failed!");
+            console.log("Paid National Dues failed!");
             console.log("Error: " + error);
           }
           else {
@@ -231,8 +231,12 @@ function nextEventPage() {
     $('#event-checkin-warning').removeAttr("hidden");
   }
   else {
-    //set event in the confirmation screen
-    $('#event-checkin-display').html(eventVar);
+    //set eventID in the confirmation screen
+    this.database.ref('/events/' + eventTitle).once('value').then((eventCheckInSnap) => {
+      var eventCheckInData = eventCheckInSnap.val();
+      var eventID = eventCheckInData.eventID;
+      $('#event-checkin-display').html(eventID);
+    });
 
     //Show confirmation div
     $('#event-checkin-edit').attr("hidden", true);
@@ -255,7 +259,7 @@ FirebaseAuth.prototype.eventCheckIn = function() {
   //Set Event ID under CWID to true
   //Add Points To Account Total
   //Show Success and then Show Form
-  var cwidEntry = $('#event-checkin-cwid').val();
+  /*var cwidEntry = $('#event-checkin-cwid').val();
   var eventTitle = $('#event-checkin-event').val();
   this.database.ref('/events/' + eventTitle).once('value').then((eventCheckInSnap) => {
     var eventCheckInData = eventCheckInSnap.val();
@@ -302,7 +306,18 @@ FirebaseAuth.prototype.eventCheckIn = function() {
         });
       }
     });
+  });*/
+  var eventTitle = $('#event-checkin-event').val();
+  this.database.ref('/events/' + eventTitle).once('value').then((eventCheckInSnap) => {
+    var eventCheckInData = eventCheckInSnap.val();
+    var eventID = eventCheckInData.eventID;
+    $('#event-checkin-display').html(eventID);
+    $('#event-checkin-display-title').html(eventTitle);
   });
+
+  //Show confirmation div
+  $('#event-checkin-edit').attr("hidden", true);
+  $('#event-checkin-confirm').removeAttr("hidden");
 };
 
 FirebaseAuth.prototype.assignBoard = function() {
@@ -363,7 +378,7 @@ FirebaseAuth.prototype.createEvent = function() {
   //Perform Regex on date
   if(date.match(/[0-9][0-9][-][0-9][0-9][-][2][0][2][0-9]{1}/g) != null && date.length == 10) {
     //Perform Regex on name
-    if(name.match(/^[a-z0-9\s]+/i) != null && name.length < 20) {
+    if(name.match(/^[a-z0-9\s]+/i) != null && name.length < 30) {
       //Perform Regex on points
       if(points.match(/[1-9]{1}/g) != null && points.length < 3) {
         //Show wait div
@@ -371,7 +386,7 @@ FirebaseAuth.prototype.createEvent = function() {
         $('#create-event-wait').removeAttr("hidden");
 
         var eventTitle = date.substring(date.length - 4).concat('-',date.substring(0,5),'-',$('#create-event-name').val());
-        var newID = "E" + randomString(8, '0123456789');
+        var newID = "E" + randomString(4, '0123456789');
         //Update data
         var newEvent = {
           points: $('#create-event-points').val(),
@@ -395,20 +410,21 @@ FirebaseAuth.prototype.createEvent = function() {
                 else {
                   //Success! Show success div
                   $('#create-event-wait').attr("hidden", true);
+                  $('#event-id-display').html(newID);
                   $('#create-event-success').removeAttr("hidden");
 
                   //Run displayData to refresh items on page
                   this.displayData();
 
                   //Show edit div and dismiss modal
-                  setTimeout(function() {
-                    $('#createEventModal').modal('hide');
-                  }, 1000);
+                  //setTimeout(function() {
+                    //$('#createEventModal').modal('hide');
+                  //}, 1000);
 
-                  setTimeout(function() {
-                    $('#create-event-success').attr("hidden", true);
-                    $('#create-event-edit').removeAttr("hidden");
-                  }, 1500);
+                  //setTimeout(function() {
+                    //$('#create-event-success').attr("hidden", true);
+                    //$('#create-event-edit').removeAttr("hidden");
+                  //}, 1000);
                 }
               });
             });
@@ -480,7 +496,7 @@ FirebaseAuth.prototype.clearDues = function() {
 
   //Update data
   var updates = {};
-  updates['/paidDues'] = false;
+  updates['/paidNationalDues'] = false;
 
   var memberList = this.database.ref('/members');
   memberList.on('value', (snapshot) => {
@@ -622,7 +638,7 @@ FirebaseAuth.prototype.exportEvent = function() {
         var cwid = child.key;
         var fname = memberData.member.fname;
         var lname = memberData.member.lname;
-        var duesBool = memberData.paidDues;
+        var duesBool = memberData.paidNationalDues;
         var attended = "false";
         var electrons = memberData.points;
         var dues = "false";
@@ -658,7 +674,7 @@ FirebaseAuth.prototype.exportMembers = function() {
       var cwid = child.key;
       var fname = memberData.member.fname;
       var lname = memberData.member.lname;
-      var duesBool = memberData.paidDues;
+      var duesBool = memberData.paidNationalDues;
       var electrons = memberData.points;
       var dues = "false";
       if(duesBool){
