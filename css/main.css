@@ -924,3 +924,7 @@ footer .row {
 .checkin-button {
   text-align: center;
 }
+
+#google-sign-in, #github-sign-in {
+  font-size: 32px;
+}

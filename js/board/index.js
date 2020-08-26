@@ -16,6 +16,7 @@ function FirebaseAuth() {
   this.duesSubmit = document.getElementById('paid-dues-submit');
   this.eventCheckInSubmit = document.getElementById('event-checkin-submit');
   this.eventCheckInCWID = document.getElementById('event-checkin-cwid');
+  this.eventDeleteSubmit = document.getElementById('delete-event-submit');
   this.boardSubmit = document.getElementById('assign-board-submit');
   this.eventSubmit = document.getElementById('create-event-submit');
   this.removeBoardSubmit = document.getElementById('remove-board-submit');
@@ -34,6 +35,7 @@ function FirebaseAuth() {
   this.duesSubmit.addEventListener('click', this.paidDues.bind(this));
   this.eventCheckInSubmit.addEventListener('click', this.eventCheckIn.bind(this));
   //this.eventCheckInCWID.addEventListener('keydown', function(e){if(e.keyCode === 13){document.getElementById('event-checkin-submit').click()}});
+  this.eventDeleteSubmit.addEventListener('click', this.eventDelete.bind(this));
   this.boardSubmit.addEventListener('click', this.assignBoard.bind(this));
   this.eventSubmit.addEventListener('click', this.createEvent.bind(this));
   this.removeBoardSubmit.addEventListener('click', this.removeBoard.bind(this));
@@ -159,9 +161,11 @@ FirebaseAuth.prototype.displayData = function() {
     $('#event-checkin-event').empty();
     $('#event-export-event').empty();
     $('#event-clear-event').empty();
+    $('#delete-event-event').empty();
     $('#event-checkin-event').append(content);
     $('#event-export-event').append(content);
     $('#event-clear-event').append(content);
+    $('#delete-event-event').append(content);
   });
 }
 
@@ -416,15 +420,19 @@ FirebaseAuth.prototype.createEvent = function() {
                   //Run displayData to refresh items on page
                   this.displayData();
 
-                  //Show edit div and dismiss modal
-                  //setTimeout(function() {
-                    //$('#createEventModal').modal('hide');
-                  //}, 1000);
+                  $('#create-event-date').val("");
+                  $('#create-event-name').val("");
+                  $('#create-event-points').val("");
 
-                  //setTimeout(function() {
-                    //$('#create-event-success').attr("hidden", true);
-                    //$('#create-event-edit').removeAttr("hidden");
-                  //}, 1000);
+                  //Show edit div and dismiss modal
+                  setTimeout(function() {
+                    $('#createEventModal').modal('hide');
+                  }, 1000);
+
+                  setTimeout(function() {
+                    $('#create-event-success').attr("hidden", true);
+                    $('#create-event-edit').removeAttr("hidden");
+                  }, 1500);
                 }
               });
             });
@@ -441,6 +449,59 @@ FirebaseAuth.prototype.createEvent = function() {
   }
   else {
     $('#create-event-warning').html("Please enter a valid date.");
+  }
+};
+
+function nextDeleteEventPage() {
+  //Check if event was chosen
+  var eventVar = $('#delete-event-event').val();
+  if(eventVar == null){
+    $('#delete-event-warning').removeAttr("hidden");
+  }
+  else {
+    $('#event-delete-display').html(eventVar);
+
+    //Show confirmation div
+    $('#delete-event-edit').attr("hidden", true);
+    $('#delete-event-confirm').removeAttr("hidden");
+  }
+}
+
+function eventDeleteBack() {
+  //Show edit div
+  $('#delete-event-confirm').attr("hidden", true);
+  $('#delete-event-edit').removeAttr("hidden");
+}
+
+FirebaseAuth.prototype.eventDelete = function() {
+  $('#delete-event-confirm').attr("hidden", true);
+  $('#delete-event-wait').removeAttr("hidden");
+  //Update data
+  var clearEventUpdates = {};
+  var pointsAfter;
+  var eventTitle = $('#delete-event-event').val();
+  if (eventTitle != null || eventTitle != ""){
+    this.database.ref('/events/' + eventTitle).remove();
+
+    //Success! Show success div
+    $('#delete-event-wait').attr("hidden", true);
+    $('#delete-event-success').removeAttr("hidden");
+
+    //Run displayData to refresh items on page
+    this.displayData();
+
+    //Show edit div and dismiss modal
+    setTimeout(function() {
+      $('#deleteEventModal').modal('hide');
+    }, 1000);
+
+    setTimeout(function() {
+      $('#delete-event-success').attr("hidden", true);
+      $('#delete-event-edit').removeAttr("hidden");
+    }, 1000);
+  }
+  else {
+
   }
 };
 
@@ -552,7 +613,7 @@ FirebaseAuth.prototype.clearPoints = function() {
   var points = 0;
 
   var eventTitle = date.substring(date.length - 4).concat('-',date.substring(0,5),'-','Cleared Points');
-  var newID = "E" + randomString(8, '0123456789');
+  var newID = "E" + randomString(4, '0123456789');
   //Update data
   var newEvent = {
     points: 0,

@@ -10,10 +10,13 @@ js: /js/board/index.js
   <h2>Events</h2>
   <div class="board-row">
     <div>
-      <button class="btn-primary" onclick="$('#eventCheckInModal').modal('show');"><i class="fas fa-calendar-check"></i><br/><h4>Event Check-In</h4></button>
+      <button class="btn-primary" onclick="$('#eventCheckInModal').modal('show');"><i class="far fa-calendar-check"></i><br/><h4>Event Check-In</h4></button>
     </div>
     <div>
       <button class="btn-primary" onclick="$('#createEventModal').modal('show');"><i class="far fa-calendar-plus"></i><br/><h4>Create Event</h4></button>
+    </div>
+    <div>
+      <button class="btn-primary" onclick="$('#deleteEventModal').modal('show');"><i class="far fa-calendar-times"></i><br/><h4>Delete Event</h4></button>
     </div>
   </div>
   <h2>Management</h2>
@@ -117,6 +120,53 @@ js: /js/board/index.js
                 <h1>Success!</h1>
                 <p>This is the Event Check In Number:</p>
                 <h3 id="event-id-display"></h3>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="deleteEventModal" tabindex="-1" role="dialog" aria-labelledby="deleteEventModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Event</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div id="delete-event-edit">
+                <div class="modal-body center">
+                    <p>Select the event below.</p>
+                    <p hidden class="text-danger center" id="delete-event-warning">Please choose an event.</p>
+                    <div class="form-group">
+                        <select class="form-control" id="delete-event-event" name="Event">
+                          <option value="">Select Event</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <btn class="form-btn btn-lg btn-primary" onclick="nextDeleteEventPage()">Next</btn>
+                </div>
+            </div>
+
+            <div hidden id="delete-event-confirm">
+              <div class="modal-body">
+                <p class="center">Delete Event</p>
+                <h3 class="center" id="event-delete-display"></h3>
+                    <p class="text-danger center">This will delete this event. Only do this for events that don't have attendance.</p>
+              </div>
+              <div class="modal-footer">
+                <btn class="form-btn btn-lg btn-primary" onclick="eventDeleteBack()">Back</btn>
+                <btn class="form-btn btn-lg btn-primary" id="delete-event-submit">Submit</btn>
+              </div>
+            </div>
+
+            <div hidden class="modal-body center" id="delete-event-wait">
+                <img src="/img/loading.gif" width="200" height="200" class="img-fluid" alt="Please Wait...">
+                <h4>Submitting...</h4>
+            </div>
+            <div hidden class="modal-body center" id="delete-event-success">
+                <h1>Success!</h1>
             </div>
         </div>
     </div>
