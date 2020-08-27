@@ -925,6 +925,22 @@ footer .row {
   text-align: center;
 }
 
-#google-sign-in, #github-sign-in {
-  font-size: 32px;
+#google-sign-in, #github-sign-in, #email-sign-in {
+  font-size: 28px;
+  min-width: 175px;
+}
+
+#sign-in-email, #sign-in-password, #sign-in-password-confirm {
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+input[type="password"] {
+  width: 100%;
+  padding: 12px;
+  box-sizing: border-box;
+  margin-top: 6px;
+  margin-bottom: 16px;
+  resize: vertical;
 }

@@ -42,12 +42,41 @@
       </div>
       <div class="modal-body center" id="login-signin">
         <h1>Welcome to OSU IEEE!</h1>
-        <p hidden class="text-danger center" id="same-email-warning">An account already exists with that email address. Please login with your other account.</p>
+        <p hidden class="text-danger center" id="same-email-warning">An account already exists with that email address. Please sign in with your other account.</p>
         <div class="container">
           <div class="row">
             <div class="col">
               <h1><button class="btn-primary" id="google-sign-in" class="center"><i class="fab fa-google" aria-hidden="true"></i>  Google</button></h1>
               <h1><button class="btn-primary" id="github-sign-in" class="center"><i class="fab fa-github" aria-hidden="true"></i>  GitHub</button></h1>
+              <h1><button class="btn-primary" id="email-sign-in" class="center"><i class="far fa-envelope" aria-hidden="true"></i>   Email</button></h1>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div hidden class="modal-body center" id="login-email">
+        <h1>Welcome to OSU IEEE!</h1>
+        <p hidden class="text-danger center" id="incorrect-password-warning">The password you entered was incorrect. Please try again.</p>
+        <p hidden class="text-danger center" id="mismatch-password-warning">The passwords don't match. Please try again.</p>
+        <p hidden class="text-danger center" id="reset-email-sent">A password reset email was sent.</p>
+        <p hidden class="text-danger center" id="invalid-email-warning">The email you entered is invalid. Please try again.</p>
+        <p hidden class="text-danger center" id="weak-password-warning">The password you entered is not strong enough. Please try again.</p>
+        <p hidden class="text-danger center" id="duplicate-email-warning">An account already exists with that email address. Please <a href="javascript:backToSignIn();">Sign In</a> with your other account.</p>
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              <h3 id="sign-in-h3">Sign In with Email</h3>
+              <div class="form-label-group">
+                <input type="text" id="sign-in-email" class="form-control" placeholder="Email" required>
+                <input type="password" id="sign-in-password" class="form-control" placeholder="Password" required>
+                <input hidden type="password" id="sign-in-password-confirm" class="form-control" placeholder="Password" required>
+              </div>
+              <div class="form-label-group">
+                <h1><btn class="form-btn btn-lg btn-primary" id="sign-in-submit">Sign In</btn></h1>
+                <h1><btn hidden class="form-btn btn-lg btn-primary" id="sign-up-submit">Sign Up</btn></h1>
+              </div>
+              <p hidden id="forgot-password">Forgot Password? <a href="#">Send reset email</a></p>
+              <p id="no-account">No account yet? <a href="javascript:createAccount();">Create an account</a></p>
+              <p hidden id="back-to-sign-in"><a href="javascript:backToSignIn();">Back to Sign In</a></p>
             </div>
           </div>
         </div>

@@ -18,6 +18,12 @@ function FirebaseAuth() {
   this.signOutButton = document.getElementById('sign-out');
   this.newAccountSignOut = document.getElementById('newaccount-signout');
   this.newAccountSubmit = document.getElementById('newaccount-submit');
+  this.emailSignInButton = document.getElementById('email-sign-in');
+  this.emailSubmitButton = document.getElementById('sign-in-submit');
+  this.emailSubmitEnter = document.getElementById('sign-in-password');
+  this.emailSignUpSubmitButton = document.getElementById('sign-up-submit');
+  this.emailSignUpSubmitEnter = document.getElementById('sign-in-password-confirm');
+  this.forgotPassword = document.getElementById('forgot-password');
 
   // Add listeners for sign in buttons.
   this.googleSignInButton.addEventListener('click', this.googleSignIn.bind(this));
@@ -25,6 +31,12 @@ function FirebaseAuth() {
   this.signOutButton.addEventListener('click', this.signOut.bind(this));
   this.newAccountSignOut.addEventListener('click', this.signOut.bind(this));
   this.newAccountSubmit.addEventListener('click', this.createAccount.bind(this));
+  this.emailSignInButton.addEventListener('click', this.emailSignIn.bind(this));
+  this.emailSubmitButton.addEventListener('click', this.emailSubmit.bind(this));
+  this.emailSubmitEnter.addEventListener('keydown', function(e){if(e.keyCode === 13){document.getElementById('sign-in-submit').click()}});
+  this.emailSignUpSubmitButton.addEventListener('click', this.emailSignUpSubmit.bind(this));
+  this.emailSignUpSubmitEnter.addEventListener('keydown', function(e){if(e.keyCode === 13){document.getElementById('sign-up-submit').click()}});
+  this.forgotPassword.addEventListener('click', this.forgotPasswordSubmit.bind(this));
 
   this.initFirebase();
 }
@@ -58,6 +70,122 @@ FirebaseAuth.prototype.githubSignIn = function() {
   provider.addScope('user');
   this.auth.signInWithPopup(provider);
   //other stuff
+};
+
+FirebaseAuth.prototype.emailSignIn = function() {
+  $('#login-signin').attr("hidden", true);
+  $('#login-email').removeAttr("hidden");
+};
+
+FirebaseAuth.prototype.forgotPasswordSubmit = function() {
+  var resetEmail = $('#sign-in-email').val();
+  this.auth.sendPasswordResetEmail(resetEmail).then(function() {
+    $('#incorrect-password-warning').attr("hidden", true);
+    $('#reset-email-sent').removeAttr("hidden");
+  }).catch(function(error) {
+    console.log(error);
+  });
+};
+
+function createAccount() {
+  $('#sign-in-password-confirm').removeAttr("hidden");
+  $('#sign-in-submit').attr("hidden", true);
+  $('#no-account').attr("hidden", true);
+  $('#back-to-sign-in').removeAttr("hidden");
+  $('#sign-up-submit').removeAttr("hidden");
+  $('#sign-in-password').val("");
+  $('#sign-in-h3').html("Sign Up with Email");
+}
+
+function backToSignIn() {
+  $('#sign-in-password-confirm').attr("hidden", true);
+  $('#sign-in-submit').removeAttr("hidden");
+  $('#no-account').removeAttr("hidden");
+  $('#back-to-sign-in').attr("hidden", true);
+  $('#sign-up-submit').attr("hidden", true);
+  $('#sign-in-password').val("");
+  $('#sign-in-email').val("");
+  $('#sign-in-h3').html("Sign In with Email");
+  $('#login-signin').removeAttr("hidden");
+  $('#login-email').attr("hidden", true);
+}
+
+FirebaseAuth.prototype.emailSubmit = function() {
+  var userEmail = $('#sign-in-email').val();
+  var userPassword = $('#sign-in-password').val();
+  this.auth.signInWithEmailAndPassword(userEmail, userPassword).catch(function(error) {
+    // Handle Errors here.
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    if (errorCode === 'auth/wrong-password') {
+      $('#incorrect-password-warning').removeAttr("hidden");
+      $('#forgot-password').removeAttr("hidden");
+      $('#no-account').attr("hidden", true);
+      $('#sign-in-password').val("");
+    }
+    else if (errorCode === 'auth/invalid-email'){
+      $('#incorrect-password-warning').attr("hidden", true);
+      $('#invalid-email-warning').removeAttr("hidden");
+      $('#sign-in-email').val("");
+      $('#sign-in-password').val("");
+    }
+    else if (errorCode === 'auth/user-not-found'){
+      $('#incorrect-password-warning').attr("hidden", true);
+      $('#invalid-email-warning').attr("hidden", true);
+      $('#sign-in-password').val("");
+      createAccount();
+    }
+    else {
+      console.log(error);
+    }
+  });
+};
+
+FirebaseAuth.prototype.emailSignUpSubmit = function() {
+  var userSignUpEmail = $('#sign-in-email').val();
+  var userSignUpPassword = $('#sign-in-password').val();
+  var userPasswordConfirm = $('#sign-in-password-confirm').val();
+
+  if (userSignUpPassword != userPasswordConfirm) {
+    $('#mismatch-password-warning').removeAttr("hidden");
+  }
+  else {
+    this.auth.createUserWithEmailAndPassword(userSignUpEmail, userSignUpPassword).catch(function(error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      if (errorCode === 'auth/email-already-in-use') {
+        $('#incorrect-password-warning').attr("hidden", true);
+        $('#mismatch-password-warning').attr("hidden", true);
+        $('#invalid-email-warning').attr("hidden", true);
+        $('#weak-password-warning').attr("hidden", true);
+        $('#same-email-warning').attr("hidden", true);
+        $('#duplicate-email-warning').removeAttr("hidden");
+        $('#sign-in-password').val("");
+        $('#sign-in-password-confirm').val("");
+      }
+      else if (errorCode === 'auth/invalid-email'){
+        $('#incorrect-password-warning').attr("hidden", true);
+        $('#mismatch-password-warning').attr("hidden", true);
+        $('#weak-password-warning').attr("hidden", true);
+        $('#invalid-email-warning').removeAttr("hidden");
+        $('#sign-in-email').val("");
+        $('#sign-in-password').val("");
+        $('#sign-in-password-confirm').val("");
+      }
+      else if (errorCode === 'auth/weak-password'){
+        $('#incorrect-password-warning').attr("hidden", true);
+        $('#mismatch-password-warning').attr("hidden", true);
+        $('#invalid-email-warning').attr("hidden", true);
+        $('#weak-password-warning').removeAttr("hidden");
+        $('#sign-in-password').val("");
+        $('#sign-in-password-confirm').val("");
+      }
+      else {
+        console.log(error);
+      }
+    });
+  }
 };
 
 FirebaseAuth.prototype.signOut = function() {
@@ -115,7 +243,6 @@ FirebaseAuth.prototype.onAuthStateChanged = function(user) {
         //Run account setup, passing the user object
         console.log("Redirect to new account");
         this.setupAccount(user);
-        this.labStatus(false);
       }
 
       //Hide sign-in button.
@@ -151,47 +278,5 @@ FirebaseAuth.prototype.onAuthStateChanged = function(user) {
 
     //Close new account modal, if open
     $('#newAccountModal').modal('hide');
-
-    //Display lab status
-    this.labStatus(false);
   }
 };
-
-FirebaseAuth.prototype.labStatus = function(labMember) {
-  //Turn off any existing listeners, if any
-  this.database.ref('/lab').off();
-  this.database.ref('/lab/open').off();
-
-  if(labMember) {
-    this.database.ref('/lab').on('value', (snapshot) => {
-      var labData = snapshot.val();
-      $("#lab-status-button").removeAttr("hidden");
-      $("#lab-status").removeClass("bg-success bg-danger");
-
-      if(labData.open) {
-        $("#lab-status").addClass("bg-success text-white");
-        $("#lab-status-text").html("The IEEE lab is currently open! Current Occupancy: " + Object.keys(labData.users).length);
-      }
-      else {
-        $("#lab-status").addClass("bg-danger text-white");
-        $("#lab-status-text").html("The IEEE lab is currently closed.");
-      }
-    });
-  }
-  else {
-    this.database.ref('/lab/open').on('value', (snapshot) => {
-      var open = snapshot.val();
-      $("#lab-status-button").attr("hidden", true);
-      $("#lab-status").removeClass("bg-success bg-danger");
-
-      if(open) {
-        $("#lab-status").addClass("bg-success text-white");
-        $("#lab-status-text").html("The IEEE lab is currently open!<br>Sign in to an IEEE lab member account to view more details.");
-      }
-      else {
-        $("#lab-status").addClass("bg-danger text-white");
-        $("#lab-status-text").html("The IEEE lab is currently closed.<br>Sign in to an IEEE lab member account to view more details.");
-      }
-    });
-  }
-}
