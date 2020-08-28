@@ -115,19 +115,6 @@ FirebaseAuth.prototype.displayData = function() {
     else {
        $('#userDropdown').html(name);
     }
-
-    //Membership Status
-    if(userElement.boardMember == true) {
-      // Show board page
-      $('#board-page').attr("hidden", false);
-      // Set text
-      $('#membershipLevel').html("Board Page");
-      $('#membershipLevel').attr("href", "/membership");
-      $('#account-status').html("Board Member");
-    }
-    else {
-      window.location.replace("/");
-    }
   });
 }
 
@@ -139,7 +126,7 @@ FirebaseAuth.prototype.eventCheckInID = function() {
   $('#event-checkin-duplicate-warning').attr("hidden", true);
 
   var cwid = this.cwid;
-  var eventIDSubmit = $('#event-checkin-eventid').val();
+  var eventIDSubmit = $('#event-checkin-eventid-user').val();
   var formattedEventID = 'E'.concat(eventIDSubmit);
   this.database.ref('/events').orderByChild("eventID").equalTo(formattedEventID).once('value').then((snapshot) => {
     var eventCheckInData = snapshot.val();
