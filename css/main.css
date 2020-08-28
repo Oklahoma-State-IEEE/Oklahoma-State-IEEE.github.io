@@ -944,3 +944,7 @@ input[type="password"] {
   margin-bottom: 16px;
   resize: vertical;
 }
+
+#event-button {
+  justify-content: center;
+}
