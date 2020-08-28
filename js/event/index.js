@@ -151,8 +151,8 @@ FirebaseAuth.prototype.eventCheckInID = function() {
         else {
           var memberCheckInData = memberCheckInSnap.val();
           // Show Warning that event was already entered
-          console.log(memberCheckInData.events);
-          console.log(memberCheckInData.events[eventID]);
+          //console.log(memberCheckInData.events);
+          //console.log(memberCheckInData.events[eventID]);
           if (memberCheckInData.events[eventID]) {
             $('#event-checkin-wait').attr("hidden", true);
             $('#event-checkin-edit').removeAttr("hidden");
