@@ -115,6 +115,25 @@ FirebaseAuth.prototype.displayData = function() {
     else {
        $('#userDropdown').html(name);
     }
+
+    //Membership Status
+    var pointText = " Points";
+    if(userElement.points == 1) {
+      pointText = " Point";
+    }
+    if(userElement.boardMember) {
+      $('#membershipLevel').html("Board Page");
+      $('#membershipLevel').attr("href", "/board");
+      $('#account-status').html("Board Member");
+    }
+    else {
+      $('#membershipLevel').html('<i class="fas fa-atom" style="padding-right: 5px;"></i>' + userElement.points + pointText);
+      $('#membershipLevel').attr("href", "#points");
+      $('#account-status').html("Member");
+    }
+
+    //Add Points to Point and Events Section
+    $('#pointText').html(userElement.points + pointText);
   });
 }
 
@@ -139,6 +158,7 @@ FirebaseAuth.prototype.eventCheckInID = function() {
     catch(err) {
       eventTitle = null;
     }
+    console.log(eventTitle);
     if (eventTitle != null) {
       this.database.ref('/members/' + cwid).once('value').then((memberCheckInSnap) => {
         if(memberCheckInSnap.val() == null) {
@@ -151,8 +171,8 @@ FirebaseAuth.prototype.eventCheckInID = function() {
         else {
           var memberCheckInData = memberCheckInSnap.val();
           // Show Warning that event was already entered
-          //console.log(memberCheckInData.events);
-          //console.log(memberCheckInData.events[eventID]);
+          console.log(memberCheckInData.events);
+          console.log(memberCheckInData.events[eventID]);
           if (memberCheckInData.events[eventID]) {
             $('#event-checkin-wait').attr("hidden", true);
             $('#event-checkin-edit').removeAttr("hidden");
