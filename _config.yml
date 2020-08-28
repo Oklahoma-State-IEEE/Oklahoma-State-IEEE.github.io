@@ -24,7 +24,9 @@ paginate_path: "/news/page:num/"
 # List of links in the navigation bar
 navbar-links:
   Membership: "membership"
-  Events: "events"
+  Events:
+    - Calendar: "events"
+    - Check-In: "check-in"
   Who We Are:
     - About Us: "about-us"
     - Officers: "officers"

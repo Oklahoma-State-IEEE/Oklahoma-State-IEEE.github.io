@@ -83,7 +83,7 @@ FirebaseAuth.prototype.onAuthStateChanged = function(user) {
       }
       else {
         //Redirect to homepage, where they can complete new account setup
-        //window.location.replace("/");
+        window.location.replace("/");
       }
 
       //Hide sign-in button.

@@ -1,0 +1,49 @@
+---
+layout: page
+title: Check-In
+permalink: /check-in.html
+js: /js/event/index.js
+---
+<div class="container" role="main" id="flex-section">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <div class="checkin-button">
+        <button class="btn-primary" onclick="$('#eventCheckInModal').modal('show');"><i class="fas fa-calendar-check"></i><h4>Event Check-In</h4></button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="eventCheckInModal" tabindex="-1" role="dialog" aria-labelledby="eventCheckInModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Event Check-In</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div id="event-checkin-edit">
+                <div class="modal-body">
+                    <p class="center">Please enter the Event ID.<br/>(Without the leading "E")</p>
+                    <p hidden class="text-danger center" id="event-checkin-warning">Please enter a valid Event ID.</p>
+                    <p hidden class="text-danger center" id="event-checkin-duplicate-warning">You have already checked into this event.</p>
+                    <p hidden class="text-danger center" id="event-checkin-cwid-warning">You need to <a href="javascript:void(0);" data-toggle="modal" data-target="#loginModal" id="sign-in-li">Sign In</a> in order to check in to events.</p>
+                    <label for="event-checkin-eventid">Event ID</label>
+                    <input type="text" id="event-checkin-eventid-user" class="form-control" placeholder="Event ID Ex:1234" required>
+                </div>
+                <div class="modal-footer">
+                  <btn class="form-btn btn-lg btn-primary" id="event-checkin-submit-user">Submit</btn>
+                </div>
+            </div>
+
+            <div hidden class="modal-body center" id="event-checkin-wait">
+                <img src="/img/loading.gif" width="200" height="200" class="img-fluid" alt="Please Wait...">
+                <h4>Submitting...</h4>
+            </div>
+            <div hidden class="modal-body center" id="event-checkin-success">
+                <h1>Success!</h1>
+            </div>
+        </div>
+    </div>
+</div>
