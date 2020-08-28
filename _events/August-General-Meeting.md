@@ -11,4 +11,4 @@ short-description: This is the first general meeting for Fall 2020! All are welc
 
 Come join our first general meeting for the Fall of 2020! We'll discuss what IEEE is and what our plans are for the semester. We'll also be giving out details regarding our prize pack for the semester.
 
-Join via Zoom here: [zoom.okstateieee.org](https://zoom.okstateieee.org). Password: 431413
+See the slides from this meeting [here](/event-presentations/AugGenMtg_Charts.pptx).

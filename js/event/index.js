@@ -13,8 +13,8 @@ function FirebaseAuth() {
   this.signOutButton = document.getElementById('sign-out');
 
   //Edit fields and submit buttons
-  this.eventCheckInSubmitID = document.getElementById('event-checkin-submit');
-  this.eventCheckInEventID = document.getElementById('event-checkin-eventid');
+  this.eventCheckInSubmitID = document.getElementById('event-checkin-submit-user');
+  this.eventCheckInEventID = document.getElementById('event-checkin-eventid-user');
 
   // Add listeners for sign in buttons
   this.googleSignInButton.addEventListener('click', this.googleSignIn.bind(this));
@@ -23,7 +23,7 @@ function FirebaseAuth() {
 
   //Add listeners for submit buttons
   this.eventCheckInSubmitID.addEventListener('click', this.eventCheckInID.bind(this));
-  this.eventCheckInEventID.addEventListener('keydown', function(e){if(e.keyCode === 13){document.getElementById('event-checkin-submit').click()}});
+  this.eventCheckInEventID.addEventListener('keydown', function(e){if(e.keyCode === 13){document.getElementById('event-checkin-submit-user').click()}});
 
   this.initFirebase();
 }
@@ -83,7 +83,7 @@ FirebaseAuth.prototype.onAuthStateChanged = function(user) {
       }
       else {
         //Redirect to homepage, where they can complete new account setup
-        window.location.replace("/");
+        //window.location.replace("/");
       }
 
       //Hide sign-in button.
