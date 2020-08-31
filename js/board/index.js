@@ -139,12 +139,12 @@ FirebaseAuth.prototype.displayData = function() {
     }
 
     //Membership Status
-    if(userElement.boardMember == true) {
+    if(userElement.accountType == "board") {
       // Show board page
       $('#board-page').attr("hidden", false);
       // Set text
       $('#membershipLevel').html("Board Page");
-      $('#membershipLevel').attr("href", "/membership");
+      $('#membershipLevel').attr("href", "/board");
       $('#account-status').html("Board Member");
     }
     else {
@@ -336,7 +336,7 @@ FirebaseAuth.prototype.assignBoard = function() {
 
     //Update data
     var updates = {};
-    updates['/boardMember'] = true;
+    updates['/accountType'] = "board";
 
     this.database.ref('/members/' + this.cwid).update(updates, (error) => {
       if(error) {
@@ -517,7 +517,7 @@ FirebaseAuth.prototype.removeBoard = function() {
 
     //Update data
     var updates = {};
-    updates['/boardMember'] = false;
+    updates['/accountType'] = "student";
 
     this.database.ref('/members/' + this.cwid).update(updates, (error) => {
       if(error) {

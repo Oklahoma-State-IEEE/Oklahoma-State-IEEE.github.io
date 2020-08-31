@@ -8,7 +8,8 @@ js: /js/account/index.js
 <div hidden id="account-page">
   <h1>Profile</h1>
   <p>View and manage your profile settings here.</p>
-  <p>Your profile is visible to organizers for any IEEE projects, competitions, and events you sign up for. IEEE's sponsors can also see your resume if you upload to the IEEE Resume book.</p>
+  <p id="student-profile-info">Your profile is visible to organizers for any IEEE projects, competitions, and events you sign up for. IEEE's sponsors can also see your resume if you upload to the IEEE Resume book.</p>
+  <p hidden id="company-profile-info">Your profile is visible to all students with accounts.</p>
   <table class="table">
     <tr>
       <th scope="row" class="table-left">Name</th>
@@ -20,31 +21,38 @@ js: /js/account/index.js
       <td class="table-center" id="account-email"></td>
       <td class="table-right"><a href="javascript:void(0);" onclick="$('#editEmailModal').modal('show');">Edit</a></td>
     </tr>
-    <tr>
+    <tr id="table-row-major">
       <th scope="row" class="table-left">Major</th>
       <td class="table-center" id="account-major"></td>
       <td class="table-right"><a href="javascript:void(0);" onclick="$('#editMajorModal').modal('show');">Edit</a></td>
     </tr>
-    <tr>
+    <tr id="table-row-year">
       <th scope="row" class="table-left">Year</th>
       <td class="table-center" id="account-year"></td>
       <td class="table-right"><a href="javascript:void(0);" onclick="$('#editYearModal').modal('show');">Edit</a></td>
     </tr>
-  </table>
-  <p>* This does not update your login email. It only updates the email visible to companies and board members.</p>
-  <h1>CWID Number</h1>
-
-  <p>Manage your CWID Number here.</p>
-
-  <p>Your CWID Number is only used when you check into meetings, and is not shared with anyone outside of the IEEE Officer Board.</p>
-
-  <table class="table">
-    <tr>
-      <th scope="row" class="table-left">CWID Number</th>
-      <td class="table-center" id="account-cwid"></td>
-      <td class="table-right" id="account-cwid-edit"></td>
+    <tr hidden id="table-row-company">
+      <th scope="row" class="table-left">Company Position</th>
+      <td class="table-center" id="company-position"></td>
+      <td class="table-right"><a href="javascript:void(0);" onclick="$('#editCompanyPosition').modal('show');">Edit</a></td>
     </tr>
   </table>
+  <p>* This does not update your login email. It only updates the email visible on your profile.</p>
+  <div id="cwid-section">
+    <h1>CWID Number</h1>
+
+    <p>Manage your CWID Number here.</p>
+
+    <p>Your CWID Number is only used when you check into meetings, and is not shared with anyone outside of the IEEE Officer Board.</p>
+
+    <table class="table">
+      <tr>
+        <th scope="row" class="table-left">CWID Number</th>
+        <td class="table-center" id="account-cwid"></td>
+        <td class="table-right" id="account-cwid-edit"></td>
+      </tr>
+    </table>
+  </div>
   <div hidden id="resume-book">
     <h1 id="ieee-resume-book">IEEE Resume Book</h1>
 
@@ -166,10 +174,17 @@ js: /js/account/index.js
 
             <div id="edit-major-edit">
                 <div class="modal-body">
-                    <p class="center">Enter your major below.</p>
-                    <div class="form-label-group">
-                      <label for="edit-major-major">Major</label>
-                      <input type="text" id="edit-major-major" class="form-control" placeholder="Major" required>
+                    <p class="center">Select your major below.</p>
+                    <div class="form-group">
+                        <select class="form-control" id="edit-major-major" name="Major">
+                          <option value="">Select Major</option>
+                          <option>B.S. Electrical Engineering</option>
+                          <option>B.S. Computer Engineering</option>
+                          <option>B.S. Mechanical Engineering</option>
+                          <option>Dual B.S. Electrical & Computer Engineering</option>
+                          <option>M.S. Electrical Engineering</option>
+                          <option>M.S. Computer Engineering</option>
+                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -203,14 +218,14 @@ js: /js/account/index.js
                     <p>Select your year below.</p>
                     <div class="form-group">
                         <select class="form-control" id="edit-year-year" name="Year">
-              <option value="">Select Year</option>
-              <option>Undergraduate, Freshman</option>
-              <option>Undergraduate, Sophomore</option>
-              <option>Undergraduate, Junior</option>
-              <option>Undergraduate, Senior</option>
-              <option>Graduate</option>
-              <option>Not a student</option>
-            </select>
+                          <option value="">Select Year</option>
+                          <option>Undergraduate, Freshman</option>
+                          <option>Undergraduate, Sophomore</option>
+                          <option>Undergraduate, Junior</option>
+                          <option>Undergraduate, Senior</option>
+                          <option>Graduate</option>
+                          <option>Not a student</option>
+                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">

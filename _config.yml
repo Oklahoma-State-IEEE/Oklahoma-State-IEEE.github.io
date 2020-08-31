@@ -24,13 +24,12 @@ paginate_path: "/news/page:num/"
 # List of links in the navigation bar
 navbar-links:
   Membership: "membership"
+  #Sponsors: "company-connection"
   Events:
     - Calendar: "events"
     - Check-In: "check-in"
-  Who We Are:
-    - About Us: "about-us"
-    - Officers: "officers"
-  Contact Us: "contact"
+  Officers: "officers"
+  Contact: "contact"
 
 # Image to show in the navigation bar - image must be a square (width = height)
 # Remove this parameter if you don't want an image in the navbar
@@ -38,7 +37,7 @@ avatar: "/img/avatar-icon.png"
 
 # If you want to have an image logo in the top-left corner instead of the title text,
 # then specify the following parameter
-# title-img: /path/to/image
+# title-img: /img/avatar-icon.png
 
 # --- Background colour/image options --- #
 
@@ -127,8 +126,12 @@ title-separator: "-"
 # Ruby Date Format
 date_format: "%B %-d, %Y"
 
-# Define collection for calendar
+# Define collections
 collections:
+  companies:
+    output: true
+    permalink: /companies/:path/
+    title: Sponsors
   events:
     output: true
     permalink: /events/:path/

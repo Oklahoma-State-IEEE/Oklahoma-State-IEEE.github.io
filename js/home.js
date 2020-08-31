@@ -24,6 +24,8 @@ function FirebaseAuth() {
   this.emailSignUpSubmitButton = document.getElementById('sign-up-submit');
   this.emailSignUpSubmitEnter = document.getElementById('sign-in-password-confirm');
   this.forgotPassword = document.getElementById('forgot-password');
+  //this.resetPasswordSubmit = document.getElementById('reset-password-submit');
+  //this.resetPasswordSubmitEnter = document.getElementById('reset-password-confirm');
 
   // Add listeners for sign in buttons.
   this.googleSignInButton.addEventListener('click', this.googleSignIn.bind(this));
@@ -37,9 +39,50 @@ function FirebaseAuth() {
   this.emailSignUpSubmitButton.addEventListener('click', this.emailSignUpSubmit.bind(this));
   this.emailSignUpSubmitEnter.addEventListener('keydown', function(e){if(e.keyCode === 13){document.getElementById('sign-up-submit').click()}});
   this.forgotPassword.addEventListener('click', this.forgotPasswordSubmit.bind(this));
+  //this.resetPasswordSubmitEnter.addEventListener('keydown', function(e){if(e.keyCode === 13){document.getElementById('reset-password-submit').click()}});
+  //this.resetPasswordSubmit.addEventListener('click', this.resetPassword.bind(this));
 
   this.initFirebase();
 }
+
+/*FirebaseAuth.prototype.resetPassword = function(auth, actionCode, continueUrl, lang) {
+  // Localize the UI to the selected language as determined by the lang
+  // parameter.
+  var accountEmail;
+  // Verify the password reset code is valid.
+  this.auth.verifyPasswordResetCode(actionCode).then(function(email) {
+    var accountEmail = email;
+
+    // TODO: Show the reset screen with the user's email and ask the user for
+    // the new password.
+    $('#login-signin').attr("hidden", true);
+    $('#password-reset').removeAttr("hidden");
+    $('#loginModal').modal('show');
+    $('#forgot-password-email').val(accountEmail);
+    var passwordReset1 = $('#password-reset-password').val();
+    var passwordReset2 = $('#reset-password-confirm').val();
+
+    if (passwordReset1 != passwordReset2 || passwordReset1 = null || passwordReset1 = undefined) {
+      $('#mismatch-password-warning').removeAttr("hidden");
+    }
+    else {
+      // Save the new password.
+      this.auth.confirmPasswordReset(actionCode, newPassword).then(function(resp) {
+        // Password reset has been confirmed and new password updated.
+
+        this.auth.signInWithEmailAndPassword(accountEmail, newPassword);
+
+      }).catch(function(error) {
+        // Error occurred during confirmation. The code might have expired or the
+        // password is too weak.
+      });
+    }
+  }).catch(function(error) {
+    // Invalid or expired action code. Ask user to try to reset the password
+    // again.
+  });
+}*/
+
 
 // Checks that the Firebase SDK has been correctly setup and configured.
 FirebaseAuth.prototype.checkSetup = function() {
@@ -57,6 +100,33 @@ FirebaseAuth.prototype.initFirebase = function() {
   this.storage = firebase.storage();
   //Initiates Firebase auth and listen to auth state changes.
   this.auth.onAuthStateChanged(this.onAuthStateChanged.bind(this));
+
+  // Get the action to complete.
+  /*var mode = getParameterByName('mode');
+  // Get the one-time code from the query parameter.
+  var actionCode = getParameterByName('oobCode');
+  // (Optional) Get the continue URL from the query parameter if available.
+  var continueUrl = getParameterByName('continueUrl');
+  // (Optional) Get the language code if available.
+  var lang = getParameterByName('lang') || 'en';
+
+  // Handle the user management action.
+  switch (mode) {
+    case 'resetPassword':
+      // Display reset password handler and UI.
+      //this.auth.resetPassword(auth, actionCode, continueUrl, lang);
+      break;
+    case 'recoverEmail':
+      // Display email recovery handler and UI.
+      //handleRecoverEmail(auth, actionCode, lang);
+      break;
+    case 'verifyEmail':
+      // Display email verification handler and UI.
+      //handleVerifyEmail(auth, actionCode, continueUrl, lang);
+      break;
+    default:
+      // Error: invalid mode.
+  }*/
 };
 
 FirebaseAuth.prototype.googleSignIn = function() {
@@ -225,9 +295,13 @@ FirebaseAuth.prototype.onAuthStateChanged = function(user) {
           }
 
           //Get membership status
-          if(userElement.boardMember == true) {
+          if(userElement.accountType == "board") {
             $('#membershipLevel').html("Board Page");
             $('#membershipLevel').attr("href", "/membership");
+          }
+          else if(userElement.accountType == "company"){
+            $('#membershipLevel').html("Student Profiles");
+            $('#membershipLevel').attr("href", "/profiles");
           }
           else {
             var pointText = " Points";
@@ -235,7 +309,7 @@ FirebaseAuth.prototype.onAuthStateChanged = function(user) {
               pointText = " Point"
             }
             $('#membershipLevel').html('<i class="fas fa-atom" style="padding-right: 5px;"></i>' + userElement.points + pointText);
-            $('#membershipLevel').attr("href", "/account/#points");
+            $('#membershipLevel').attr("href", "/account/#event-data");
           }
         });
       }

@@ -48,7 +48,7 @@ FirebaseAuth.prototype.createAccount = function() {
         //Create account under members branch
         var newMember = {
           activated: true,
-          boardMember: false,
+          accountType: "student",
           paidNationalDues: false,
           events: {
             "E0000": false

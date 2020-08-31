@@ -948,3 +948,7 @@ input[type="password"] {
 #event-button {
   justify-content: center;
 }
+
+#companyProfileTable th {
+  cursor: pointer;
+}

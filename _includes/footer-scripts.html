@@ -40,6 +40,25 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
+      <div hidden class="modal-body center" id="password-reset">
+        <h1>Welcome to OSU IEEE!</h1>
+        <p hidden class="text-danger center" id="mismatch-password-warning">The passwords don't match. Please try again.</p>
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              <h3>Reset Password</h3>
+              <div class="form-label-group">
+                <input type="text" id="password-reset-email" class="form-control" placeholder="Email" required>
+                <input type="password" id="password-reset-password" class="form-control" placeholder="Password" required>
+                <input hidden type="password" id="reset-password-confirm" class="form-control" placeholder="Password" required>
+              </div>
+              <div class="form-label-group">
+                <h1><btn class="form-btn btn-lg btn-primary" id="reset-password-submit">Reset Password</btn></h1>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="modal-body center" id="login-signin">
         <h1>Welcome to OSU IEEE!</h1>
         <p hidden class="text-danger center" id="same-email-warning">An account already exists with that email address. Please sign in with your other account.</p>

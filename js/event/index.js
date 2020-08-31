@@ -121,14 +121,18 @@ FirebaseAuth.prototype.displayData = function() {
     if(userElement.points == 1) {
       pointText = " Point";
     }
-    if(userElement.boardMember) {
+    if(userElement.accountType == "board") {
       $('#membershipLevel').html("Board Page");
       $('#membershipLevel').attr("href", "/board");
       $('#account-status').html("Board Member");
     }
+    else if(userElement.accountType == "company"){
+      $('#membershipLevel').html("Student Profiles");
+      $('#membershipLevel').attr("href", "/profiles");
+    }
     else {
       $('#membershipLevel').html('<i class="fas fa-atom" style="padding-right: 5px;"></i>' + userElement.points + pointText);
-      $('#membershipLevel').attr("href", "#points");
+      $('#membershipLevel').attr("href", "#event-data");
       $('#account-status').html("Member");
     }
 

@@ -1594,6 +1594,7 @@ pre code {
   margin-left: -15px;
   display: flex;
   flex-wrap: wrap;
+  overflow: hidden;
 }
 #footer .row {
   justify-content: center;

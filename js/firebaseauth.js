@@ -103,17 +103,21 @@ FirebaseAuth.prototype.onAuthStateChanged = function(user) {
           }
 
           //Get membership status
-          if(userElement.boardMember == true) {
+          if(userElement.accountType == "board") {
             $('#membershipLevel').html("Board Page");
             $('#membershipLevel').attr("href", "/board");
           }
-          else {
+          else if(userElement.accountType == "company"){
+            $('#membershipLevel').html("Student Profiles");
+            $('#membershipLevel').attr("href", "/profiles");            
+          }
+          else{
             var pointText = " Points";
             if(userElement.points == 1) {
               pointText = " Point"
             }
             $('#membershipLevel').html('<i class="fas fa-atom" style="padding-right: 5px;"></i>' + userElement.points + pointText);
-            $('#membershipLevel').attr("href", "/account/#points");
+            $('#membershipLevel').attr("href", "/account/#event-data");
           }
         });
       }

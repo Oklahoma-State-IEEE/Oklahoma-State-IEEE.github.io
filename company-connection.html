@@ -1,0 +1,36 @@
+---
+layout: page
+title: Company Connection
+permalink: /company-connection.html
+js: /js/firebaseauth.js
+---
+
+<div class="posts-list">
+  {% for company in site.companies %}
+	  <article class="post-preview">
+	    <a href="{{ company.url | relative_url }}">
+		  <h2 class="post-title">{{ company.title }}</h2>
+
+		  {% if post.subtitle %}
+		  <h3 class="post-subtitle">
+		    {{ post.subtitle }}
+		  </h3>
+		  {% endif %}
+	    </a>
+
+	    <div class="post-entry-container">
+	      {% if company.thumbnail-image %}
+	      <div class="post-image">
+	        <a href="{{ company.url | relative_url }}">
+	          <img src="{{ company.thumbnail-image | relative_url }}">
+	        </a>
+	      </div>
+	      {% endif %}
+	      <div class="post-entry event-hr">
+					<hr>
+	        {{ company.short-description }}
+	      </div>
+	    </div>
+
+	   </article>
+</div>
