@@ -1,5 +1,6 @@
 ---
 layout: event
+js: /js/firebaseauth.js
 title: Texas Instruments Info Session
 event_starttime: 2020-09-03 17:30:00
 event_endtime: 2020-09-03 18:30:00
