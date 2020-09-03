@@ -14,8 +14,6 @@ Oklahoma State University IEEE, NSBE, and SWE Present Texas Instruments.
 
 Come join Texas Instruments engineers as they share about their many different engineering roles and hiring opportunities available. Worth 10 Electrons!
 
-Before attendance, please ensure you fill out this [information form](http://tinyurl.com/y2wv6pd3) so Texas Instruments has your information.
-
 Join the meeting [here](https://zoom.okstateieee.org).
 
 ![Texas Instruments Flier](/img/events/Texas Instruments Flier 3.jpg)
