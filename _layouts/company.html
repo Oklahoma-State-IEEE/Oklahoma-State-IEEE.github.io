@@ -1,12 +1,12 @@
 ---
-layout: base
+layout: companybase
 ---
 
 {% include header.html type="event" %}
 <div class="container" role="main" id="flex-section">
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-      <a class="companyitem-backlink" href="/company-connection">Back to All Companies</a>
+      <a class="eventitem-backlink" href="/company-connection">Back to All Companies</a>
       <br/>
       <article role="main" class="company-post">
         <div class="companyitem-column-meta">
@@ -16,7 +16,7 @@ layout: base
           {{ content }}
         </div>
       </article>
+      <p id="comment-signin-warning">You must be signed in to view and add comments.</p>
     </div>
   </div>
 </div>
-<script src="/js/firebaseauth.js" type="text/javascript"></script>

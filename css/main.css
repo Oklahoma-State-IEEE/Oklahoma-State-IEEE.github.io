@@ -952,3 +952,61 @@ input[type="password"] {
 #companyProfileTable th {
   cursor: pointer;
 }
+
+.company-overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  transition: .5s ease;
+  background-color: #00629B;
+  padding: 10px;
+}
+
+.company-flex-container {
+  position: relative;
+  width: 33%;
+  max-height: 250px;
+  padding: 10px;
+}
+
+.company-flex-container-home {
+  position: relative;
+  width: 20%;
+  max-height: 250px;
+  padding: 10px;
+}
+
+.company-flex-container img, .company-flex-container-home img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  max-height: 230px;
+}
+
+.company-flex-container:hover .company-overlay, .company-flex-container-home:hover .company-overlay {
+  opacity: 1;
+}
+
+.company-text {
+  color: white;
+  font-size: 20px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.companies-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: left;
+}

@@ -1,5 +1,6 @@
 ---
 layout: event
+js: /js/firebaseauth.js
 title: Annual Spring Banquet 2020
 event_starttime: 2020-04-10 17:30:00
 event_endtime: 2020-04-10 21:00:00

@@ -5,32 +5,30 @@ permalink: /company-connection.html
 js: /js/firebaseauth.js
 ---
 
-<div class="posts-list">
+<div class="posts-list companies-list">
+  <p>The following companies have graciously sponsored OSU IEEE. For more details, just click on the company logo. Want to see your company on this list? Email us at <a href="mailto:ieee@okstate.edu">ieee@okstate.edu</a> to learn more!</p>
   {% for company in site.companies %}
-	  <article class="post-preview">
+    <div class="company-flex-container">
 	    <a href="{{ company.url | relative_url }}">
-		  <h2 class="post-title">{{ company.title }}</h2>
+        {% if company.thumbnail-image %}
+  	      <img src="{{ company.thumbnail-image | relative_url }}">
+          <div class="company-overlay">
+            <div class="company-text">{{ company.short-description }}</div>
+          </div>
+	      {% else %}
+		      <h2 class="post-title">{{ company.title }}</h2>
+          {% if post.subtitle %}
+            <h3 class="post-subtitle">
+              {{ company.subtitle }}
+            </h3>
+    	      <div class="post-entry event-hr">
+    					<hr>
+    	        {{ company.short-description }}
+    	      </div>
+          {% endif %}
+        {% endif %}
 
-		  {% if post.subtitle %}
-		  <h3 class="post-subtitle">
-		    {{ post.subtitle }}
-		  </h3>
-		  {% endif %}
 	    </a>
-
-	    <div class="post-entry-container">
-	      {% if company.thumbnail-image %}
-	      <div class="post-image">
-	        <a href="{{ company.url | relative_url }}">
-	          <img src="{{ company.thumbnail-image | relative_url }}">
-	        </a>
-	      </div>
-	      {% endif %}
-	      <div class="post-entry event-hr">
-					<hr>
-	        {{ company.short-description }}
-	      </div>
-	    </div>
-	   </article>
-		{% endfor %}
+	  </div>
+	{% endfor %}
 </div>

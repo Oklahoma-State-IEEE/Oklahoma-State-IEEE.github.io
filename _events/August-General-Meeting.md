@@ -1,5 +1,6 @@
 ---
 layout: event
+js: /js/firebaseauth.js
 title: August General Meeting
 event_starttime: 2020-08-27 18:00:00
 event_endtime: 2020-08-27 19:00:00

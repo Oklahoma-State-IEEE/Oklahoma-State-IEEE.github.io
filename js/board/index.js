@@ -382,7 +382,7 @@ FirebaseAuth.prototype.createEvent = function() {
   //Perform Regex on date
   if(date.match(/[0-9][0-9][-][0-9][0-9][-][2][0][2][0-9]{1}/g) != null && date.length == 10) {
     //Perform Regex on name
-    if(name.match(/^[a-z0-9\s]+/i) != null && name.length < 30) {
+    if(name.match(/^[a-z0-9\s]+/i) != null && name.length < 40) {
       //Perform Regex on points
       if(points.match(/[1-9]{1}/g) != null && points.length < 3) {
         //Show wait div

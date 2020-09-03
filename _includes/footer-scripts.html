@@ -25,7 +25,7 @@
   {% endfor %}
 {% endif %}
 
-{% if page.js %}
+{% if page.js or company.js or event.js %}
   {% for js in page.js %}
     <script src="{{ js | relative_url }}"></script>
   {% endfor %}
