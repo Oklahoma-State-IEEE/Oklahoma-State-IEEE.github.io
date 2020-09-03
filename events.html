@@ -38,9 +38,9 @@ integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="  crossorigin="an
 <div id="calendar"></div>
 <div class="posts-list">
   {% for event in site.events %}
-		{% assign current_date = 'now' | date: '%s' %}
-		{% assign event_formatted_date = event.event_starttime | date: '%s' %}
-		{% if event_formatted_date > current_date %}
+		{% assign current_date = 'now' | date: '%s' | minus: 86400 %}
+		{% assign event_formatted_date = event.event_starttime | date: '%s' | plus: 0 %}
+		{% if event_formatted_date >= current_date %}
 
 		  <article class="post-preview">
 		    <a href="{{ event.url | relative_url }}">

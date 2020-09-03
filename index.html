@@ -10,9 +10,9 @@ js: /js/home.js
   <div class="posts-list">
     {% assign posted = false %}
     {% for event in site.events %}
-      {% assign current_date = 'now' | date: '%s' %}
-      {% assign event_formatted_date = event.event_starttime | date: '%s' %}
-      {% if event_formatted_date > current_date %}
+      {% assign current_date = 'now' | date: '%s' | minus: 86400 %}
+      {% assign event_formatted_date = event.event_starttime | date: '%s' | plus: 0 %}
+      {% if event_formatted_date >= current_date %}
         {% if posted != true %}
           {% assign posted = true %}
           <h2>Our Next Event</h2>
@@ -57,11 +57,35 @@ js: /js/home.js
     {% endfor %}
   </div>
 
-  <!--<h2>Company Connections</h2>
-  <p>Our mission is to enable students to learn about various aspects of both general engineering and electrical engineering. Due to the current virtual climate due to COVID-19, we are aiming to allow companies to directly connect with our members and the student body here at Oklahoma State University. We are doing that through our <a href="/company-connection">Company Connection page</a>. Here companies can post an overview video that students can comment questions on. The company can then respond to questions and view student profiles.
-    <br/><br/>
-    Interested in working with us? Check out our <a href="/company-connection">Company Connection page</a> or <a href="mailto:ieee@okstate.edu">email us</a> to learn more!
-  </p>-->
+  <h2>Company Connections</h2>
+  <p>Our mission is to enable students to learn about various aspects of both general engineering and electrical engineering. Due to the current virtual climate due to COVID-19, we are aiming to allow companies to directly connect with our members and the student body here at Oklahoma State University. We are doing that through our <a href="/company-connection">Company Connection page</a>. Here companies can post company content that students can comment questions on. The company can then respond to questions and view student profiles.</p>
+  <div class="posts-list companies-list">
+    <p>The following companies have graciously sponsored OSU IEEE. For more details, just click on the company logo. Want to see your company on this list? Email us at <a href="mailto:ieee@okstate.edu">ieee@okstate.edu</a> to learn more!</p>
+    {% for company in site.companies %}
+      <div class="company-flex-container-home">
+  	    <a href="{{ company.url | relative_url }}">
+          {% if company.thumbnail-image %}
+    	      <img src="{{ company.thumbnail-image | relative_url }}">
+            <div class="company-overlay">
+              <div class="company-text">{{ company.short-description }}</div>
+            </div>
+  	      {% else %}
+  		      <h2 class="post-title">{{ company.title }}</h2>
+            {% if post.subtitle %}
+              <h3 class="post-subtitle">
+                {{ company.subtitle }}
+              </h3>
+      	      <div class="post-entry event-hr">
+      					<hr>
+      	        {{ company.short-description }}
+      	      </div>
+            {% endif %}
+          {% endif %}
+
+  	    </a>
+  	  </div>
+  	{% endfor %}
+  </div>
 </div>
   <div class="modal fade" id="newAccountModal" tabindex="-1" role="dialog" aria-labelledby="newAccountModal" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
