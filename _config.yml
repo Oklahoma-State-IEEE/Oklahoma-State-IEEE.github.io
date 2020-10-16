@@ -24,7 +24,7 @@ paginate_path: "/news/page:num/"
 # List of links in the navigation bar
 navbar-links:
   Membership: "membership"
-  #Sponsors: "company-connection"
+  Sponsors: "company-connection"
   Events:
     - Calendar: "events"
     - Check-In: "check-in"
