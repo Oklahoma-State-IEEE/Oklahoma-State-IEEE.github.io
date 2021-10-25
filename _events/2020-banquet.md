@@ -4,7 +4,6 @@ js: /js/firebaseauth.js
 title: Annual Spring Banquet 2020
 event_starttime: 2020-04-10 17:30:00
 event_endtime: 2020-04-10 21:00:00
-image: /img/banquet.png
 normal_date_time: Friday, April 10, 2020 5:30PM - 9:00PM
 location: Meditations Banquet Hall
 address: 1205 N Country Club Rd, Stillwater, OK 74075
